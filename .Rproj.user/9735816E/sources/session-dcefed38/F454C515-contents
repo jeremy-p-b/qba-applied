@@ -1,7 +1,0 @@
-delete_merged_file: true
-language:
-  ui:
-    chapter_name: ""
-bookdown::gitbook:
-  split_by: chapter
-  split_bib: false

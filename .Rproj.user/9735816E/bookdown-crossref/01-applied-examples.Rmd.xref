@@ -1,8 +1,0 @@
-h1:applied-examples Applied examples
-h2:bias-formulas-for-selection-bias Bias formulas for selection bias
-fig:bias-adj Bias-adjusted risk ratio for different assumed selection probabilities
-fig:bias-adj-lb Bias-adjusted risk ratio for lower bound of 95% confidence interval for different assumed selection probabilities
-h2:e-values-for-unmeasured-confounding E-values for unmeasured confounding
-h2:probabilistic-bias-analysis-for-misclassification Probabilistic bias analysis for misclassification
-fig:triangular Triangular distribution for sensitivity
-
