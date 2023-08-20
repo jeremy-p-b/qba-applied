@@ -3,10 +3,8 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">A Minimal Book Example</a></li>
-      after: |
-        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
-    edit: https://github.com/USERNAME/REPO/edit/BRANCH/%s
+        <li><a href="./">Applied Quantitative Bias Analysis</a></li>
+    edit: https://github.com/jeremy-p-b/qba-applied
     download: ["pdf", "epub"]
 bookdown::pdf_book:
   includes:
