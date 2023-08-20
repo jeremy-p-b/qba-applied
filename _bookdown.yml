@@ -5,3 +5,4 @@ language:
 bookdown::gitbook:
   split_by: chapter
   split_bib: false
+output_dir: "docs"

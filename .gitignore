@@ -47,3 +47,7 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Bookdown outputs
+_book/
+_bookdown_files/
