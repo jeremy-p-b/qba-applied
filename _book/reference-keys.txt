@@ -1,0 +1,10 @@
+fig:bias-adj
+fig:bias-adj-lb
+fig:unnamed-chunk-4
+fig:triangular
+about
+applied-examples
+bias-formulas-for-selection-bias
+e-values-for-unmeasured-confounding
+probabilistic-bias-analysis-for-misclassification
+parts

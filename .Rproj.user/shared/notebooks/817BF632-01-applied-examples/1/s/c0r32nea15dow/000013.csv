@@ -1,0 +1,5 @@
+"0","# load EValue package and ggplotify "
+"0","library(EValue)"
+"0",""
+"0","#Calculate E-values"
+"0","evalues.HR(est=1.38, lo=1.33, hi=1.44, rare=TRUE) %>%  knitr::kable()"

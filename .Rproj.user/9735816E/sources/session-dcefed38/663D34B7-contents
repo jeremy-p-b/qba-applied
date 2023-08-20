@@ -1,0 +1,60 @@
+@article{patorno2017lithium,
+	title        = {Lithium use in pregnancy and the risk of cardiac malformations},
+	author       = {Patorno, Elisabetta and Huybrechts, Krista F and Bateman, Brian T and Cohen, Jacqueline M and Desai, Rishi J and Mogun, Helen and Cohen, Lee S and Hernandez-Diaz, Sonia},
+	year         = 2017,
+	journal      = {New England Journal of Medicine},
+	publisher    = {Mass Medical Soc},
+	volume       = 376,
+	number       = 23,
+	pages        = {2245--2254}
+}
+@article{greenland1996basic,
+  title={Basic methods for sensitivity analysis of biases},
+  author={Greenland, Sander},
+  journal={International journal of epidemiology},
+  volume={25},
+  number={6},
+  pages={1107--1116},
+  year={1996},
+  publisher={Oxford University Press}
+}
+@article{brown2021proton,
+  title={Proton pump inhibitors and risk of all-cause and cause-specific mortality: A cohort study},
+  author={Brown, Jeremy P and Tazare, John R and Williamson, Elizabeth and Mansfield, Kathryn E and Evans, Stephen J and Tomlinson, Laurie A and Bhaskaran, Krishnan and Smeeth, Liam and Wing, Kevin and Douglas, Ian J},
+  journal={British journal of clinical pharmacology},
+  volume={87},
+  number={8},
+  pages={3150--3161},
+  year={2021},
+  publisher={Wiley Online Library}
+}
+@article{ding2016sensitivity,
+  title={Sensitivity analysis without assumptions},
+  author={Ding, Peng and VanderWeele, Tyler J},
+  journal={Epidemiology (Cambridge, Mass.)},
+  volume={27},
+  number={3},
+  pages={368},
+  year={2016},
+  publisher={Wolters Kluwer Health}
+}
+@article{huybrechts2014antidepressant,
+  title={Antidepressant use in pregnancy and the risk of cardiac defects},
+  author={Huybrechts, Krista F and Palmsten, Kristin and Avorn, Jerry and Cohen, Lee S and Holmes, Lewis B and Franklin, Jessica M and Mogun, Helen and Levin, Raisa and Kowal, Mary and Setoguchi, Soko and others},
+  journal={New England Journal of Medicine},
+  volume={370},
+  number={25},
+  pages={2397--2407},
+  year={2014},
+  publisher={Mass Medical Soc}
+}
+@article{fox2005method,
+  title={A method to automate probabilistic sensitivity analyses of misclassified binary variables},
+  author={Fox, Matthew P and Lash, Timothy L and Greenland, Sander},
+  journal={International journal of epidemiology},
+  volume={34},
+  number={6},
+  pages={1370--1376},
+  year={2005},
+  publisher={Oxford University Press}
+}

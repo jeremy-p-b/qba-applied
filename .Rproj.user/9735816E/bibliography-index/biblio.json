@@ -1,0 +1,58 @@
+{
+    "sources": [
+        {
+            "author": [
+                {
+                    "family": "Patorno",
+                    "given": "Elisabetta"
+                },
+                {
+                    "family": "Huybrechts",
+                    "given": "Krista F"
+                },
+                {
+                    "family": "Bateman",
+                    "given": "Brian T"
+                },
+                {
+                    "family": "Cohen",
+                    "given": "Jacqueline M"
+                },
+                {
+                    "family": "Desai",
+                    "given": "Rishi J"
+                },
+                {
+                    "family": "Mogun",
+                    "given": "Helen"
+                },
+                {
+                    "family": "Cohen",
+                    "given": "Lee S"
+                },
+                {
+                    "family": "Hernandez-Diaz",
+                    "given": "Sonia"
+                }
+            ],
+            "container-title": "New England Journal of Medicine",
+            "id": "patorno2017lithium",
+            "issue": "23",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "page": "2245-2254",
+            "publisher": "Mass Medical Soc",
+            "title": "Lithium use in pregnancy and the risk of cardiac malformations",
+            "type": "article-journal",
+            "volume": "376"
+        }
+    ],
+    "project_biblios": [
+        "book.bib"
+    ]
+}
