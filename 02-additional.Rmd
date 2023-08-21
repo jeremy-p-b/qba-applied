@@ -283,8 +283,37 @@ glm(y ~ a + x, family="binomial", data=misclassified_data) %>%
 
 ### Probabalistic bias analysis
 
+Rather than specify a single or range of values for the bias parameters of sensitivity and specificity we can instead specify probability distributions for these parameters and apply probabilistic bias analysis.
+
+```{r, }
+
+# specify bias parameters
+sensitivity_a0 <-  1
+sensitivity_a1 <- 0.8
+specificity_a0 <- 1
+specificity_a1 <- 0.99
+
+```
 
 
 ## Unmeasured confounding
 
+If the confounder, $X$, had not been measured then we would not be able to adjust for it, and our estimates would be biased.
 
+```{r}
+# restrict data to selected subsample
+unmeasured_confounder_data <- sim_data %>% select(a,y)
+
+# fit logistic regression model without confounder
+lgr_model_confounded <- glm(y ~ a, family="binomial", data=unmeasured_confounder_data)
+
+# tidy model outputs
+or_confounded <- lgr_model_confounded %>% 
+  tidy(exponentiate=TRUE, conf.int=TRUE) %>% 
+  filter(term == "a") %>% 
+  select(estimate, conf.low, conf.high) 
+
+# output as table
+or_confounded %>%
+  knitr::kable(caption = "Estimated odds ratio with unmeasured confounder")
+```
