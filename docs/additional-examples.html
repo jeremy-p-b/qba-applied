@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Additional example applications | Code for Quantitative Bias Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Additional example applications | Code for Quantitative Bias Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Additional example applications | Code for Quantitative Bias Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Jeremy Brown" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="applied-examples.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Applied Quantitative Bias Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="applied-examples.html"><a href="applied-examples.html"><i class="fa fa-check"></i><b>2</b> Applied examples</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="applied-examples.html"><a href="applied-examples.html#bias-formulas-for-selection-bias"><i class="fa fa-check"></i><b>2.1</b> Bias formulas for selection bias</a></li>
+<li class="chapter" data-level="2.2" data-path="applied-examples.html"><a href="applied-examples.html#e-values-for-unmeasured-confounding"><i class="fa fa-check"></i><b>2.2</b> E-values for unmeasured confounding</a></li>
+<li class="chapter" data-level="2.3" data-path="applied-examples.html"><a href="applied-examples.html#probabilistic-bias-analysis-for-misclassification"><i class="fa fa-check"></i><b>2.3</b> Probabilistic bias analysis for misclassification</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="additional-examples.html"><a href="additional-examples.html"><i class="fa fa-check"></i><b>3</b> Additional example applications</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="additional-examples.html"><a href="additional-examples.html#selection-bias"><i class="fa fa-check"></i><b>3.1</b> Selection bias</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="additional-examples.html"><a href="additional-examples.html#bias-formulas"><i class="fa fa-check"></i><b>3.1.1</b> Bias formulas</a></li>
+<li class="chapter" data-level="3.1.2" data-path="additional-examples.html"><a href="additional-examples.html#weighting"><i class="fa fa-check"></i><b>3.1.2</b> Weighting</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="additional-examples.html"><a href="additional-examples.html#misclassification"><i class="fa fa-check"></i><b>3.2</b> Misclassification</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="additional-examples.html"><a href="additional-examples.html#bias-formulas-1"><i class="fa fa-check"></i><b>3.2.1</b> Bias formulas</a></li>
+<li class="chapter" data-level="3.2.2" data-path="additional-examples.html"><a href="additional-examples.html#record-level-correction"><i class="fa fa-check"></i><b>3.2.2</b> Record-level correction</a></li>
+<li class="chapter" data-level="3.2.3" data-path="additional-examples.html"><a href="additional-examples.html#probabalistic-bias-analysis"><i class="fa fa-check"></i><b>3.2.3</b> Probabalistic bias analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="additional-examples.html"><a href="additional-examples.html#unmeasured-confounding"><i class="fa fa-check"></i><b>3.3</b> Unmeasured confounding</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Code for Quantitative Bias Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="additional-examples" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Additional example applications<a href="additional-examples.html#additional-examples" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We will present here examples of quantitative bias analysis using simulated participant-level data for a cohort study with a binary treatment, binary outcome, and binary confounder.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="additional-examples.html#cb1-1" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb1-2"><a href="additional-examples.html#cb1-2" tabindex="-1"></a><span class="fu">require</span>(tidyverse)</span>
+<span id="cb1-3"><a href="additional-examples.html#cb1-3" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span>
+<span id="cb1-4"><a href="additional-examples.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(broom) </span>
+<span id="cb1-5"><a href="additional-examples.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code></pre></div>
+<div id="selection-bias" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Selection bias<a href="additional-examples.html#selection-bias" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the simulated data we have a binary treatment <span class="math inline">\(a\)</span>, binary confounder <span class="math inline">\(x\)</span>, outcome <span class="math inline">\(y\)</span>, and a binary indicator for selection into the study <span class="math inline">\(s\)</span>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="additional-examples.html#cb2-1" tabindex="-1"></a>sim_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/simulated_data.csv&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(x,a,y,s)</span>
+<span id="cb2-2"><a href="additional-examples.html#cb2-2" tabindex="-1"></a>sim_data  <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 4
+##       x     a     y     s
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0     0     0     1
+## 2     0     0     0     1
+## 3     0     0     0     1
+## 4     0     0     0     1
+## 5     0     0     0     1</code></pre>
+<p>The data was generated such that the causal odds ratio between treatment and outcome was 2. However, in a given sample the estimate may differ due to random error. If we observed a random sample from the target population we could unbiasedly estimate the odds ratio using logistic regression.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="additional-examples.html#cb4-1" tabindex="-1"></a><span class="co"># fit logistic regression model</span></span>
+<span id="cb4-2"><a href="additional-examples.html#cb4-2" tabindex="-1"></a>lgr_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x <span class="sc">+</span> a, <span class="at">data=</span>sim_data, <span class="at">family=</span><span class="st">&quot;binomial&quot;</span>) </span>
+<span id="cb4-3"><a href="additional-examples.html#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="additional-examples.html#cb4-4" tabindex="-1"></a><span class="co"># tidy model outputs</span></span>
+<span id="cb4-5"><a href="additional-examples.html#cb4-5" tabindex="-1"></a>or <span class="ot">&lt;-</span> lgr_model <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="additional-examples.html#cb4-6" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">exponentiate=</span><span class="cn">TRUE</span>, <span class="at">conf.int=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-7"><a href="additional-examples.html#cb4-7" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;a&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-8"><a href="additional-examples.html#cb4-8" tabindex="-1"></a>  <span class="fu">select</span>(estimate, conf.low, conf.high)</span>
+<span id="cb4-9"><a href="additional-examples.html#cb4-9" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="additional-examples.html#cb4-10" tabindex="-1"></a><span class="co"># output as table</span></span>
+<span id="cb4-11"><a href="additional-examples.html#cb4-11" tabindex="-1"></a>or <span class="sc">%&gt;%</span> </span>
+<span id="cb4-12"><a href="additional-examples.html#cb4-12" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Estimated odds ratio&quot;</span>)</span></code></pre></div>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-5">Table 3.1: </span>Estimated odds ratio
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2.040021
+</td>
+<td style="text-align:right;">
+1.942229
+</td>
+<td style="text-align:right;">
+2.142647
+</td>
+</tr>
+</tbody>
+</table>
+<p>However, if we consider that selection into the study was dependent on exposure and outcome and that we only observed a selected subsample of the target population, then the estimated odds ratio is biased.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="additional-examples.html#cb5-1" tabindex="-1"></a><span class="co"># restrict data to selected subsample</span></span>
+<span id="cb5-2"><a href="additional-examples.html#cb5-2" tabindex="-1"></a>selected_data <span class="ot">&lt;-</span> sim_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(s <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb5-3"><a href="additional-examples.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="additional-examples.html#cb5-4" tabindex="-1"></a><span class="co"># fit logistic regression model</span></span>
+<span id="cb5-5"><a href="additional-examples.html#cb5-5" tabindex="-1"></a>lgr_model_selected <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x <span class="sc">+</span> a, <span class="at">data=</span>selected_data, <span class="at">family=</span><span class="st">&quot;binomial&quot;</span>) </span>
+<span id="cb5-6"><a href="additional-examples.html#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="additional-examples.html#cb5-7" tabindex="-1"></a><span class="co"># tidy model outputs</span></span>
+<span id="cb5-8"><a href="additional-examples.html#cb5-8" tabindex="-1"></a>or_selected <span class="ot">&lt;-</span> lgr_model_selected <span class="sc">%&gt;%</span> </span>
+<span id="cb5-9"><a href="additional-examples.html#cb5-9" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">exponentiate=</span><span class="cn">TRUE</span>, <span class="at">conf.int=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-10"><a href="additional-examples.html#cb5-10" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;a&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-11"><a href="additional-examples.html#cb5-11" tabindex="-1"></a>  <span class="fu">select</span>(estimate, conf.low, conf.high) </span>
+<span id="cb5-12"><a href="additional-examples.html#cb5-12" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="additional-examples.html#cb5-13" tabindex="-1"></a><span class="co"># output as table</span></span>
+<span id="cb5-14"><a href="additional-examples.html#cb5-14" tabindex="-1"></a>or_selected <span class="sc">%&gt;%</span></span>
+<span id="cb5-15"><a href="additional-examples.html#cb5-15" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Estimated odds ratio in selected sample&quot;</span>)</span></code></pre></div>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-6">Table 3.2: </span>Estimated odds ratio in selected sample
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1.577843
+</td>
+<td style="text-align:right;">
+1.494616
+</td>
+<td style="text-align:right;">
+1.665406
+</td>
+</tr>
+</tbody>
+</table>
+<div id="bias-formulas" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Bias formulas<a href="additional-examples.html#bias-formulas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>One option is to apply bias formulas for the odds ratio.</p>
+<p><span class="math display">\[
+OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
+\]</span>
+Given that the data was simulated we know the selection probabilities (<span class="math inline">\(S11=0.7\)</span>, <span class="math inline">\(S01=1\)</span>, <span class="math inline">\(S10=0.9\)</span>, <span class="math inline">\(S00=1\)</span>) and can directly plug them in to estimate a bias-adjusted odds ratio. However, in practice we will not know these probabilities and will typically specify a range of values, or for probabilistic bias analysis a distribution of values.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="additional-examples.html#cb6-1" tabindex="-1"></a><span class="co"># define bias parameters</span></span>
+<span id="cb6-2"><a href="additional-examples.html#cb6-2" tabindex="-1"></a>S11 <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb6-3"><a href="additional-examples.html#cb6-3" tabindex="-1"></a>S01 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb6-4"><a href="additional-examples.html#cb6-4" tabindex="-1"></a>S10 <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb6-5"><a href="additional-examples.html#cb6-5" tabindex="-1"></a>S00 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb6-6"><a href="additional-examples.html#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="additional-examples.html#cb6-7" tabindex="-1"></a><span class="co"># apply bias formula</span></span>
+<span id="cb6-8"><a href="additional-examples.html#cb6-8" tabindex="-1"></a>bias_adjusted_or <span class="ot">&lt;-</span> or_selected <span class="sc">%&gt;%</span> </span>
+<span id="cb6-9"><a href="additional-examples.html#cb6-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(estimate, conf.low, conf.high), <span class="sc">~</span> .x <span class="sc">*</span> (S01<span class="sc">*</span>S10)<span class="sc">/</span>(S11<span class="sc">*</span>S00)))</span>
+<span id="cb6-10"><a href="additional-examples.html#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="additional-examples.html#cb6-11" tabindex="-1"></a><span class="co"># output as table</span></span>
+<span id="cb6-12"><a href="additional-examples.html#cb6-12" tabindex="-1"></a>bias_adjusted_or <span class="sc">%&gt;%</span> </span>
+<span id="cb6-13"><a href="additional-examples.html#cb6-13" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Bias-adjusted odds ratio&quot;</span>)</span></code></pre></div>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-7">Table 3.3: </span>Bias-adjusted odds ratio
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2.028656
+</td>
+<td style="text-align:right;">
+1.92165
+</td>
+<td style="text-align:right;">
+2.141236
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="weighting" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Weighting<a href="additional-examples.html#weighting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Alternatively, we can weight the individual records by the inverse probability of selection and use bootstapping to calculate a confidence interval</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="additional-examples.html#cb7-1" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb7-2"><a href="additional-examples.html#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="additional-examples.html#cb7-3" tabindex="-1"></a><span class="co"># Add weights</span></span>
+<span id="cb7-4"><a href="additional-examples.html#cb7-4" tabindex="-1"></a>selected_data_with_weights <span class="ot">&lt;-</span> selected_data <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="additional-examples.html#cb7-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prob_select =</span> a<span class="sc">*</span>y<span class="sc">*</span>S11 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>a)<span class="sc">*</span>y<span class="sc">*</span>S01 <span class="sc">+</span> a<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>y)<span class="sc">*</span>S10 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>a)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>y)<span class="sc">*</span>S00) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="additional-examples.html#cb7-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">inverse_prob =</span> <span class="dv">1</span><span class="sc">/</span>prob_select) </span>
+<span id="cb7-7"><a href="additional-examples.html#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="additional-examples.html#cb7-8" tabindex="-1"></a><span class="co"># define function to estimate weighted odds ratio (needed for bootstrap function)</span></span>
+<span id="cb7-9"><a href="additional-examples.html#cb7-9" tabindex="-1"></a>calculate_weighted_or <span class="ot">&lt;-</span> <span class="cf">function</span>(weighted_data, i) {</span>
+<span id="cb7-10"><a href="additional-examples.html#cb7-10" tabindex="-1"></a>  weighted_lgr <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x <span class="sc">+</span> a, <span class="at">family=</span><span class="st">&quot;binomial&quot;</span>, <span class="at">data=</span>weighted_data[i,], <span class="at">weights=</span>inverse_prob) </span>
+<span id="cb7-11"><a href="additional-examples.html#cb7-11" tabindex="-1"></a>  weighted_or <span class="ot">&lt;-</span> <span class="fu">coef</span>(weighted_lgr)[[<span class="st">&quot;a&quot;</span>]] <span class="sc">%&gt;%</span> <span class="fu">exp</span>()</span>
+<span id="cb7-12"><a href="additional-examples.html#cb7-12" tabindex="-1"></a>  <span class="fu">return</span>(weighted_or)</span>
+<span id="cb7-13"><a href="additional-examples.html#cb7-13" tabindex="-1"></a>}</span>
+<span id="cb7-14"><a href="additional-examples.html#cb7-14" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="additional-examples.html#cb7-15" tabindex="-1"></a><span class="co"># set seed of random number generator to ensure reproducibility</span></span>
+<span id="cb7-16"><a href="additional-examples.html#cb7-16" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">747</span>)</span>
+<span id="cb7-17"><a href="additional-examples.html#cb7-17" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="additional-examples.html#cb7-18" tabindex="-1"></a><span class="co"># bootstrap calculation of confidence intervals</span></span>
+<span id="cb7-19"><a href="additional-examples.html#cb7-19" tabindex="-1"></a>bootstrap_estimates <span class="ot">&lt;-</span> <span class="fu">boot</span>(selected_data_with_weights, calculate_weighted_or, <span class="at">R=</span><span class="dv">1000</span>)</span>
+<span id="cb7-20"><a href="additional-examples.html#cb7-20" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="additional-examples.html#cb7-21" tabindex="-1"></a><span class="co"># calculate bias-adjusted point estimate using entire selected subsample</span></span>
+<span id="cb7-22"><a href="additional-examples.html#cb7-22" tabindex="-1"></a>point_estimate <span class="ot">&lt;-</span> <span class="fu">calculate_weighted_or</span>(selected_data_with_weights, <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(selected_data_with_weights))</span>
+<span id="cb7-23"><a href="additional-examples.html#cb7-23" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="additional-examples.html#cb7-24" tabindex="-1"></a><span class="co"># calculate percentile bootstrap confidence interval</span></span>
+<span id="cb7-25"><a href="additional-examples.html#cb7-25" tabindex="-1"></a>conf_int <span class="ot">&lt;-</span> <span class="fu">quantile</span>(bootstrap_estimates<span class="sc">$</span>t, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb7-26"><a href="additional-examples.html#cb7-26" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="additional-examples.html#cb7-27" tabindex="-1"></a><span class="co"># output bias-adjusted estimate</span></span>
+<span id="cb7-28"><a href="additional-examples.html#cb7-28" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">estimate=</span>point_estimate, <span class="at">conf.low=</span>conf_int[[<span class="dv">1</span>]], <span class="at">conf.high=</span>conf_int[[<span class="dv">2</span>]]) <span class="sc">%&gt;%</span></span>
+<span id="cb7-29"><a href="additional-examples.html#cb7-29" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
+<p>If we expect selection probabilities to differ within levels of covariates then we can specify different selection probabilities for different strata of covariates.</p>
+</div>
+</div>
+<div id="misclassification" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Misclassification<a href="additional-examples.html#misclassification" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We will now consider some quantitative bias analysis methods for misclassification of a binary outcome. Similar approaches can be applied for misclassification of a binary exposure.</p>
+<p>With differential misclassification of the outcome, <span class="math inline">\(m_y\)</span>, the odds ratio is biased.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="additional-examples.html#cb8-1" tabindex="-1"></a><span class="co"># load data</span></span>
+<span id="cb8-2"><a href="additional-examples.html#cb8-2" tabindex="-1"></a>misclassified_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/simulated_data.csv&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(x,a,m_y,s)</span>
+<span id="cb8-3"><a href="additional-examples.html#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="additional-examples.html#cb8-4" tabindex="-1"></a><span class="co"># fit logistic regression model with misclassified outcome</span></span>
+<span id="cb8-5"><a href="additional-examples.html#cb8-5" tabindex="-1"></a>lgr_model_misclassified <span class="ot">&lt;-</span> <span class="fu">glm</span>(m_y <span class="sc">~</span> x <span class="sc">+</span> a, <span class="at">data=</span>misclassified_data, <span class="at">family=</span><span class="st">&quot;binomial&quot;</span>) </span>
+<span id="cb8-6"><a href="additional-examples.html#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="additional-examples.html#cb8-7" tabindex="-1"></a><span class="co"># tidy model outputs</span></span>
+<span id="cb8-8"><a href="additional-examples.html#cb8-8" tabindex="-1"></a>or_misclassified <span class="ot">&lt;-</span> lgr_model_misclassified <span class="sc">%&gt;%</span> </span>
+<span id="cb8-9"><a href="additional-examples.html#cb8-9" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">exponentiate=</span><span class="cn">TRUE</span>, <span class="at">conf.int=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-10"><a href="additional-examples.html#cb8-10" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;a&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-11"><a href="additional-examples.html#cb8-11" tabindex="-1"></a>  <span class="fu">select</span>(estimate, conf.low, conf.high) </span>
+<span id="cb8-12"><a href="additional-examples.html#cb8-12" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="additional-examples.html#cb8-13" tabindex="-1"></a><span class="co"># output as table</span></span>
+<span id="cb8-14"><a href="additional-examples.html#cb8-14" tabindex="-1"></a>or_misclassified <span class="sc">%&gt;%</span></span>
+<span id="cb8-15"><a href="additional-examples.html#cb8-15" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Estimated odds ratio with misclassified outcome&quot;</span>)</span></code></pre></div>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-9">Table 3.4: </span>Estimated odds ratio with misclassified outcome
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1.737071
+</td>
+<td style="text-align:right;">
+1.650733
+</td>
+<td style="text-align:right;">
+1.827756
+</td>
+</tr>
+</tbody>
+</table>
+<div id="bias-formulas-1" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Bias formulas<a href="additional-examples.html#bias-formulas-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bias formulas for misclassification typically apply to 2x2 tables or 2x2 tables stratified by covariates and require us to specify the bias parameters of sensitivity and specificity. Given that the data was simulated, we know that sensitivity and specificity among the treated were 80% and 99%, and that sensitivity and specificity among the unexposed were 100%. In practice, we do not know these values, but can estimate them using validation studies and specify a range or, for probabilistic bias analysis, distribution of plausible values.</p>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-10">Table 3.5: </span>Observed 2x2 table
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+A=1
+</th>
+<th style="text-align:left;">
+A=0
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Y*=1
+</td>
+<td style="text-align:left;">
+a
+</td>
+<td style="text-align:left;">
+b
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Y*=0
+</td>
+<td style="text-align:left;">
+c
+</td>
+<td style="text-align:left;">
+d
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-11">Table 3.6: </span>Corrected 2x2 table
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+A=1
+</th>
+<th style="text-align:left;">
+A=0
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Y=1
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Y=0
+</td>
+<td style="text-align:left;">
+C
+</td>
+<td style="text-align:left;">
+D
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="additional-examples.html#cb9-1" tabindex="-1"></a><span class="co"># specify bias parameters</span></span>
+<span id="cb9-2"><a href="additional-examples.html#cb9-2" tabindex="-1"></a>sensitivity_a0 <span class="ot">&lt;-</span>  <span class="dv">1</span></span>
+<span id="cb9-3"><a href="additional-examples.html#cb9-3" tabindex="-1"></a>sensitivity_a1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb9-4"><a href="additional-examples.html#cb9-4" tabindex="-1"></a>specificity_a0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb9-5"><a href="additional-examples.html#cb9-5" tabindex="-1"></a>specificity_a1 <span class="ot">&lt;-</span> <span class="fl">0.99</span></span>
+<span id="cb9-6"><a href="additional-examples.html#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="additional-examples.html#cb9-7" tabindex="-1"></a><span class="co"># define function to correct 2x2 table</span></span>
+<span id="cb9-8"><a href="additional-examples.html#cb9-8" tabindex="-1"></a>correct_two_by_two <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, c, d, sensitivity_a0, sensitivity_a1, specificity_a0, specificity_a1) {</span>
+<span id="cb9-9"><a href="additional-examples.html#cb9-9" tabindex="-1"></a>  A <span class="ot">&lt;-</span> (a <span class="sc">-</span> (a <span class="sc">+</span> c)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>specificity_a1))<span class="sc">/</span>(sensitivity_a1 <span class="sc">+</span> specificity_a1 <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb9-10"><a href="additional-examples.html#cb9-10" tabindex="-1"></a>  B <span class="ot">&lt;-</span> (b <span class="sc">-</span> (b <span class="sc">+</span> d)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>specificity_a0))<span class="sc">/</span>(sensitivity_a0 <span class="sc">+</span> specificity_a0 <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb9-11"><a href="additional-examples.html#cb9-11" tabindex="-1"></a>  C <span class="ot">&lt;-</span> a <span class="sc">+</span> c <span class="sc">-</span> A</span>
+<span id="cb9-12"><a href="additional-examples.html#cb9-12" tabindex="-1"></a>  D <span class="ot">&lt;-</span> b <span class="sc">+</span> d <span class="sc">-</span> B</span>
+<span id="cb9-13"><a href="additional-examples.html#cb9-13" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span><span class="ot">=</span>A,<span class="st">&quot;B&quot;</span><span class="ot">=</span>B,<span class="st">&quot;C&quot;</span><span class="ot">=</span>C,<span class="st">&quot;D&quot;</span><span class="ot">=</span>D))</span>
+<span id="cb9-14"><a href="additional-examples.html#cb9-14" tabindex="-1"></a>}</span>
+<span id="cb9-15"><a href="additional-examples.html#cb9-15" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="additional-examples.html#cb9-16" tabindex="-1"></a><span class="co"># extract 2x2 table values</span></span>
+<span id="cb9-17"><a href="additional-examples.html#cb9-17" tabindex="-1"></a>a_x0 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">1</span>, a<span class="sc">==</span><span class="dv">1</span>, x<span class="sc">==</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-18"><a href="additional-examples.html#cb9-18" tabindex="-1"></a>b_x0 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">1</span>, a<span class="sc">==</span><span class="dv">0</span>, x<span class="sc">==</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-19"><a href="additional-examples.html#cb9-19" tabindex="-1"></a>c_x0 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">0</span>, a<span class="sc">==</span><span class="dv">1</span>, x<span class="sc">==</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-20"><a href="additional-examples.html#cb9-20" tabindex="-1"></a>d_x0 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">0</span>, a<span class="sc">==</span><span class="dv">0</span>, x<span class="sc">==</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-21"><a href="additional-examples.html#cb9-21" tabindex="-1"></a>a_x1 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">1</span>, a<span class="sc">==</span><span class="dv">1</span>, x<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-22"><a href="additional-examples.html#cb9-22" tabindex="-1"></a>b_x1 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">1</span>, a<span class="sc">==</span><span class="dv">0</span>, x<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-23"><a href="additional-examples.html#cb9-23" tabindex="-1"></a>c_x1 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">0</span>, a<span class="sc">==</span><span class="dv">1</span>, x<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-24"><a href="additional-examples.html#cb9-24" tabindex="-1"></a>d_x1 <span class="ot">&lt;-</span> misclassified_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(m_y<span class="sc">==</span><span class="dv">0</span>, a<span class="sc">==</span><span class="dv">0</span>, x<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb9-25"><a href="additional-examples.html#cb9-25" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="additional-examples.html#cb9-26" tabindex="-1"></a><span class="co"># correct 2x2 table </span></span>
+<span id="cb9-27"><a href="additional-examples.html#cb9-27" tabindex="-1"></a>corr_two_by_two_x0 <span class="ot">&lt;-</span> <span class="fu">correct_two_by_two</span>(a_x0, b_x0, c_x0, d_x0, sensitivity_a0, sensitivity_a1, specificity_a0, specificity_a1)</span>
+<span id="cb9-28"><a href="additional-examples.html#cb9-28" tabindex="-1"></a>corr_two_by_two_x1 <span class="ot">&lt;-</span> <span class="fu">correct_two_by_two</span>(a_x1, b_x1, c_x1, d_x1, sensitivity_a0, sensitivity_a1, specificity_a0, specificity_a1)</span>
+<span id="cb9-29"><a href="additional-examples.html#cb9-29" tabindex="-1"></a></span>
+<span id="cb9-30"><a href="additional-examples.html#cb9-30" tabindex="-1"></a><span class="co"># calculate Mantel-Haenszel odds ratio</span></span>
+<span id="cb9-31"><a href="additional-examples.html#cb9-31" tabindex="-1"></a>numerator <span class="ot">&lt;-</span> corr_two_by_two_x1[[<span class="dv">1</span>]]<span class="sc">*</span>corr_two_by_two_x1[[<span class="dv">4</span>]]<span class="sc">/</span><span class="fu">sum</span>(corr_two_by_two_x1) <span class="sc">+</span> corr_two_by_two_x0[[<span class="dv">1</span>]]<span class="sc">*</span>corr_two_by_two_x0[[<span class="dv">4</span>]]<span class="sc">/</span><span class="fu">sum</span>(corr_two_by_two_x0)</span>
+<span id="cb9-32"><a href="additional-examples.html#cb9-32" tabindex="-1"></a>denominator <span class="ot">&lt;-</span> corr_two_by_two_x1[[<span class="dv">2</span>]]<span class="sc">*</span>corr_two_by_two_x1[[<span class="dv">3</span>]]<span class="sc">/</span><span class="fu">sum</span>(corr_two_by_two_x1) <span class="sc">+</span> corr_two_by_two_x0[[<span class="dv">2</span>]]<span class="sc">*</span>corr_two_by_two_x0[[<span class="dv">3</span>]]<span class="sc">/</span><span class="fu">sum</span>(corr_two_by_two_x0)</span>
+<span id="cb9-33"><a href="additional-examples.html#cb9-33" tabindex="-1"></a></span>
+<span id="cb9-34"><a href="additional-examples.html#cb9-34" tabindex="-1"></a>mh_estimate <span class="ot">&lt;-</span> numerator<span class="sc">/</span>denominator</span>
+<span id="cb9-35"><a href="additional-examples.html#cb9-35" tabindex="-1"></a><span class="fu">print</span>(mh_estimate)</span></code></pre></div>
+<pre><code>## [1] 2.003725</code></pre>
+<p>We can use bootstrapping to calculate a confidence interval.</p>
+</div>
+<div id="record-level-correction" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Record-level correction<a href="additional-examples.html#record-level-correction" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For record-level correction we can as before calculate two by two tables, but as a second step use these to</p>
+</div>
+<div id="probabalistic-bias-analysis" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Probabalistic bias analysis<a href="additional-examples.html#probabalistic-bias-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+</div>
+<div id="unmeasured-confounding" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Unmeasured confounding<a href="additional-examples.html#unmeasured-confounding" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="applied-examples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

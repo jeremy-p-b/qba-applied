@@ -13,10 +13,6 @@ OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
 $$
 Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e. 20% probability of termination). The selection probability of unexposed with cardiac malformation was varied from 0.5 to 0.7. (30-50% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0% to -10%).
 
-```{r, include=FALSE}
-# Load packages
-
-```
 
 ```{r bias-adj, fig.align='center', message=FALSE, fig.cap="Bias-adjusted risk ratio for different assumed selection probabilities"}
 library(tidyverse)

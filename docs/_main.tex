@@ -263,11 +263,11 @@ And we can use \emph{bias\_plot} from the \emph{EValue} package to display an E-
 
 \begin{figure}
 
-{\centering \includegraphics{_main_files/figure-latex/unnamed-chunk-4-1} 
+{\centering \includegraphics{_main_files/figure-latex/unnamed-chunk-3-1} 
 
 }
 
-\caption{E-value plot for point estimate}\label{fig:unnamed-chunk-4}
+\caption{E-value plot for point estimate}\label{fig:unnamed-chunk-3}
 \end{figure}
 
 The E-value for the point estimate was 2.10 and for the lower bound of the point estimate was 1.99. This represents the minimum strength of association that an unmeasured confounder would need to have with either exposure or outcome to reduce the hazard ratio to the null (i.e.~1). An unmeasured confounder with strength of association with exposure and outcome below the line in the plot could not possibly explain, on its own, the observed association.
@@ -291,6 +291,346 @@ In a cohort study of pregnant women conducted using insurance claims data, the o
 Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for the positive and negative predictive value (Figure \ref{fig:triangular}).
 
 Values were repeatedly sampled at random 1,000 times from these distributions and these sampled values were used to calculate a distribution of bias-adjusted estimates. The median bias-adjusted estimate was 1.06 with 95\% simulation interval 0.92-1.22.
+
+\hypertarget{additional-examples}{%
+\chapter{Additional example applications}\label{additional-examples}}
+
+We will present here examples of quantitative bias analysis using simulated participant-level data for a cohort study with a binary treatment, binary outcome, and binary confounder.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{require}\NormalTok{(tidyverse)}
+\FunctionTok{require}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(broom) }
+\FunctionTok{library}\NormalTok{(janitor)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{selection-bias}{%
+\section{Selection bias}\label{selection-bias}}
+
+In the simulated data we have a binary treatment \(a\), binary confounder \(x\), outcome \(y\), and a binary indicator for selection into the study \(s\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sim\_data }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/simulated\_data.csv"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(x,a,y,s)}
+\NormalTok{sim\_data  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 4
+##       x     a     y     s
+##   <dbl> <dbl> <dbl> <dbl>
+## 1     0     0     0     1
+## 2     0     0     0     1
+## 3     0     0     0     1
+## 4     0     0     0     1
+## 5     0     0     0     1
+\end{verbatim}
+
+The data was generated such that the causal odds ratio between treatment and outcome was 2. However, in a given sample the estimate may differ due to random error. If we observed a random sample from the target population we could unbiasedly estimate the odds ratio using logistic regression.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# fit logistic regression model}
+\NormalTok{lgr\_model }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ a, }\AttributeTok{data=}\NormalTok{sim\_data, }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{) }
+
+\CommentTok{\# tidy model outputs}
+\NormalTok{or }\OtherTok{\textless{}{-}}\NormalTok{ lgr\_model }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tidy}\NormalTok{(}\AttributeTok{exponentiate=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{conf.int=}\ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"a"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(estimate, conf.low, conf.high)}
+
+\CommentTok{\# output as table}
+\NormalTok{or }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Estimated odds ratio"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-7}Estimated odds ratio}
+\centering
+\begin{tabular}[t]{r|r|r}
+\hline
+estimate & conf.low & conf.high\\
+\hline
+2.040021 & 1.942229 & 2.142647\\
+\hline
+\end{tabular}
+\end{table}
+
+However, if we consider that selection into the study was dependent on exposure and outcome and that we only observed a selected subsample of the target population, then the estimated odds ratio is biased.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# restrict data to selected subsample}
+\NormalTok{selected\_data }\OtherTok{\textless{}{-}}\NormalTok{ sim\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(s }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# fit logistic regression model}
+\NormalTok{lgr\_model\_selected }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ a, }\AttributeTok{data=}\NormalTok{selected\_data, }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{) }
+
+\CommentTok{\# tidy model outputs}
+\NormalTok{or\_selected }\OtherTok{\textless{}{-}}\NormalTok{ lgr\_model\_selected }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tidy}\NormalTok{(}\AttributeTok{exponentiate=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{conf.int=}\ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"a"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(estimate, conf.low, conf.high) }
+
+\CommentTok{\# output as table}
+\NormalTok{or\_selected }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Estimated odds ratio in selected sample"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-8}Estimated odds ratio in selected sample}
+\centering
+\begin{tabular}[t]{r|r|r}
+\hline
+estimate & conf.low & conf.high\\
+\hline
+1.577843 & 1.494616 & 1.665406\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{bias-formulas}{%
+\subsection{Bias formulas}\label{bias-formulas}}
+
+One option is to apply bias formulas for the odds ratio.
+
+\[
+OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
+\]
+Given that the data was simulated we know the selection probabilities (\(S11=0.7\), \(S01=1\), \(S10=0.9\), \(S00=1\)) and can directly plug them in to estimate a bias-adjusted odds ratio. However, in practice we will not know these probabilities and will typically specify a range of values, or for probabilistic bias analysis a distribution of values.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# define bias parameters}
+\NormalTok{S11 }\OtherTok{\textless{}{-}} \FloatTok{0.7}
+\NormalTok{S01 }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{S10 }\OtherTok{\textless{}{-}} \FloatTok{0.9}
+\NormalTok{S00 }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\CommentTok{\# apply bias formula}
+\NormalTok{bias\_adjusted\_or }\OtherTok{\textless{}{-}}\NormalTok{ or\_selected }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{c}\NormalTok{(estimate, conf.low, conf.high), }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .x }\SpecialCharTok{*}\NormalTok{ (S01}\SpecialCharTok{*}\NormalTok{S10)}\SpecialCharTok{/}\NormalTok{(S11}\SpecialCharTok{*}\NormalTok{S00)))}
+
+\CommentTok{\# output as table}
+\NormalTok{bias\_adjusted\_or }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Bias{-}adjusted odds ratio"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-9}Bias-adjusted odds ratio}
+\centering
+\begin{tabular}[t]{r|r|r}
+\hline
+estimate & conf.low & conf.high\\
+\hline
+2.028656 & 1.92165 & 2.141236\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{weighting}{%
+\subsection{Weighting}\label{weighting}}
+
+Alternatively, we can weight the individual records by the inverse probability of selection and use bootstapping to calculate a confidence interval
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(boot)}
+
+\CommentTok{\# Add weights}
+\NormalTok{selected\_data\_with\_weights }\OtherTok{\textless{}{-}}\NormalTok{ selected\_data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{prob\_select =}\NormalTok{ a}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{S11 }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{S01 }\SpecialCharTok{+}\NormalTok{ a}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{y)}\SpecialCharTok{*}\NormalTok{S10 }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{y)}\SpecialCharTok{*}\NormalTok{S00) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{inverse\_prob =} \DecValTok{1}\SpecialCharTok{/}\NormalTok{prob\_select) }
+
+\CommentTok{\# define function to estimate weighted odds ratio (needed for bootstrap function)}
+\NormalTok{calculate\_weighted\_or }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(weighted\_data, i) \{}
+\NormalTok{  weighted\_lgr }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ a, }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{, }\AttributeTok{data=}\NormalTok{weighted\_data[i,], }\AttributeTok{weights=}\NormalTok{inverse\_prob) }
+\NormalTok{  weighted\_or }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(weighted\_lgr)[[}\StringTok{"a"}\NormalTok{]] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{exp}\NormalTok{()}
+  \FunctionTok{return}\NormalTok{(weighted\_or)}
+\NormalTok{\}}
+
+\CommentTok{\# set seed of random number generator to ensure reproducibility}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{747}\NormalTok{)}
+
+\CommentTok{\# bootstrap calculation of confidence intervals}
+\NormalTok{bootstrap\_estimates }\OtherTok{\textless{}{-}} \FunctionTok{boot}\NormalTok{(selected\_data\_with\_weights, calculate\_weighted\_or, }\AttributeTok{R=}\DecValTok{1000}\NormalTok{)}
+
+\CommentTok{\# calculate bias{-}adjusted point estimate using entire selected subsample}
+\NormalTok{point\_estimate }\OtherTok{\textless{}{-}} \FunctionTok{calculate\_weighted\_or}\NormalTok{(selected\_data\_with\_weights, }\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(selected\_data\_with\_weights))}
+
+\CommentTok{\# calculate percentile bootstrap confidence interval}
+\NormalTok{conf\_int }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(bootstrap\_estimates}\SpecialCharTok{$}\NormalTok{t, }\FunctionTok{c}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\FloatTok{0.975}\NormalTok{))}
+
+\CommentTok{\# output bias{-}adjusted estimate}
+\FunctionTok{tibble}\NormalTok{(}\AttributeTok{estimate=}\NormalTok{point\_estimate, }\AttributeTok{conf.low=}\NormalTok{conf\_int[[}\DecValTok{1}\NormalTok{]], }\AttributeTok{conf.high=}\NormalTok{conf\_int[[}\DecValTok{2}\NormalTok{]]) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+If we expect selection probabilities to differ within levels of covariates then we can specify different selection probabilities for different strata of covariates.
+
+\hypertarget{misclassification}{%
+\section{Misclassification}\label{misclassification}}
+
+We will now consider some quantitative bias analysis methods for misclassification of a binary outcome. Similar approaches can be applied for misclassification of a binary exposure.
+
+With differential misclassification of the outcome, \(m_y\), the odds ratio is biased.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load data}
+\NormalTok{misclassified\_data }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/simulated\_data.csv"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(x,a,m\_y,s)}
+
+\CommentTok{\# fit logistic regression model with misclassified outcome}
+\NormalTok{lgr\_model\_misclassified }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(m\_y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ a, }\AttributeTok{data=}\NormalTok{misclassified\_data, }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{) }
+
+\CommentTok{\# tidy model outputs}
+\NormalTok{or\_misclassified }\OtherTok{\textless{}{-}}\NormalTok{ lgr\_model\_misclassified }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tidy}\NormalTok{(}\AttributeTok{exponentiate=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{conf.int=}\ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"a"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(estimate, conf.low, conf.high) }
+
+\CommentTok{\# output as table}
+\NormalTok{or\_misclassified }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Estimated odds ratio with misclassified outcome"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-11}Estimated odds ratio with misclassified outcome}
+\centering
+\begin{tabular}[t]{r|r|r}
+\hline
+estimate & conf.low & conf.high\\
+\hline
+1.737071 & 1.650733 & 1.827756\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{bias-formulas-1}{%
+\subsection{Bias formulas}\label{bias-formulas-1}}
+
+Bias formulas for misclassification typically apply to 2x2 tables or 2x2 tables stratified by covariates and require us to specify the bias parameters of sensitivity and specificity. Given that the data was simulated, we know that sensitivity and specificity among the treated were 80\% and 99\%, and that sensitivity and specificity among the unexposed were 100\%. In practice, we do not know these values, but can estimate them using validation studies and specify a range or, for probabilistic bias analysis, distribution of plausible values.
+
+\begin{tabular}{l|l|l}
+\hline
+  & A.1 & A.0\\
+\hline
+Y*=1 & a & b\\
+\hline
+Y*=0 & c & d\\
+\hline
+\end{tabular}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# create 2x2 table stratified by confounder}
+\NormalTok{two\_by\_two }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{tabyl}\NormalTok{(m\_y,a, x) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{adorn\_title}\NormalTok{()}
+
+\CommentTok{\# 2x2 among those without the confounder}
+\FunctionTok{print}\NormalTok{(}\StringTok{"Without confounder"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Without confounder"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{two\_by\_two[[}\DecValTok{1}\NormalTok{]] }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          a      
+##  m_y     0     1
+##    0 57291 18078
+##    1  2982  1720
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 2x2 among those with the confounder}
+\FunctionTok{print}\NormalTok{(}\StringTok{"With confounder"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "With confounder"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{two\_by\_two[[}\DecValTok{2}\NormalTok{]] }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         a     
+##  m_y    0    1
+##    0 9138 8503
+##    1  932 1356
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# specify bias parameters}
+\NormalTok{sensitivity\_a0 }\OtherTok{\textless{}{-}}  \DecValTok{1}
+\NormalTok{sensitivity\_a1 }\OtherTok{\textless{}{-}} \FloatTok{0.8}
+\NormalTok{specificity\_a0 }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{specificity\_a1 }\OtherTok{\textless{}{-}} \FloatTok{0.99}
+
+\CommentTok{\# define function to correct 2x2 table}
+\NormalTok{correct\_two\_by\_two }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(a, b, c, d, sensitivity\_a0, sensitivity\_a1, specificity\_a0, specificity\_a1) \{}
+  
+\NormalTok{\}}
+
+\CommentTok{\# extract values from 2x2 tables}
+\NormalTok{a\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\NormalTok{b\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\NormalTok{c\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\NormalTok{d\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\NormalTok{a\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\NormalTok{b\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\NormalTok{c\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\NormalTok{d\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+
+\CommentTok{\# correct 2x2 table }
+\FunctionTok{correct\_two\_by\_two}\NormalTok{(a\_x0, b\_x0, c\_x0, d\_x0, sensitivity\_a0, sensitivity\_a1, specificity\_a0, specificity\_a1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## NULL
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# calculate }
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{record-level-correction}{%
+\subsection{Record-level correction}\label{record-level-correction}}
+
+\hypertarget{probabalistic-bias-analysis}{%
+\subsection{Probabalistic bias analysis}\label{probabalistic-bias-analysis}}
+
+\hypertarget{unmeasured-confounding}{%
+\section{Unmeasured confounding}\label{unmeasured-confounding}}
 
   \bibliography{book.bib}
 

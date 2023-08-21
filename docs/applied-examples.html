@@ -36,7 +36,7 @@ set in the _output.yml file.</p>" />
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="additional-examples.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -164,7 +164,7 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">Applied Quantitative Bias Analysis</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
@@ -174,10 +174,22 @@ div.csl-indent {
 <li class="chapter" data-level="2.2" data-path="applied-examples.html"><a href="applied-examples.html#e-values-for-unmeasured-confounding"><i class="fa fa-check"></i><b>2.2</b> E-values for unmeasured confounding</a></li>
 <li class="chapter" data-level="2.3" data-path="applied-examples.html"><a href="applied-examples.html#probabilistic-bias-analysis-for-misclassification"><i class="fa fa-check"></i><b>2.3</b> Probabilistic bias analysis for misclassification</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="additional-examples.html"><a href="additional-examples.html"><i class="fa fa-check"></i><b>3</b> Additional example applications</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="additional-examples.html"><a href="additional-examples.html#selection-bias"><i class="fa fa-check"></i><b>3.1</b> Selection bias</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="additional-examples.html"><a href="additional-examples.html#bias-formulas"><i class="fa fa-check"></i><b>3.1.1</b> Bias formulas</a></li>
+<li class="chapter" data-level="3.1.2" data-path="additional-examples.html"><a href="additional-examples.html#weighting"><i class="fa fa-check"></i><b>3.1.2</b> Weighting</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="additional-examples.html"><a href="additional-examples.html#misclassification"><i class="fa fa-check"></i><b>3.2</b> Misclassification</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="additional-examples.html"><a href="additional-examples.html#bias-formulas-1"><i class="fa fa-check"></i><b>3.2.1</b> Bias formulas</a></li>
+<li class="chapter" data-level="3.2.2" data-path="additional-examples.html"><a href="additional-examples.html#record-level-correction"><i class="fa fa-check"></i><b>3.2.2</b> Record-level correction</a></li>
+<li class="chapter" data-level="3.2.3" data-path="additional-examples.html"><a href="additional-examples.html#probabalistic-bias-analysis"><i class="fa fa-check"></i><b>3.2.3</b> Probabalistic bias analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="additional-examples.html"><a href="additional-examples.html#unmeasured-confounding"><i class="fa fa-check"></i><b>3.3</b> Unmeasured confounding</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
-<li class="divider"></li>
-<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
-
 </ul>
 
       </nav>
@@ -301,8 +313,8 @@ Figure 2.2: Bias-adjusted risk ratio for lower bound of 95% confidence interval 
 <p>And we can use <em>bias_plot</em> from the <em>EValue</em> package to display an E-value plot.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="applied-examples.html#cb3-1" tabindex="-1"></a><span class="co"># Generate E-value plot for point estimate</span></span>
 <span id="cb3-2"><a href="applied-examples.html#cb3-2" tabindex="-1"></a><span class="fu">bias_plot</span>(<span class="fl">1.38</span>, <span class="at">xmax=</span><span class="dv">9</span>) </span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
-<img src="_main_files/figure-html/unnamed-chunk-4-1.png" alt="E-value plot for point estimate" width="672" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
+<img src="_main_files/figure-html/unnamed-chunk-3-1.png" alt="E-value plot for point estimate" width="672" />
 <p class="caption">
 Figure 2.3: E-value plot for point estimate
 </p>
@@ -351,7 +363,7 @@ Patorno, Elisabetta, Krista F Huybrechts, Brian T Bateman, Jacqueline M Cohen, R
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="additional-examples.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -382,8 +394,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/01-applied-examples.Rmd",
-"text": "Edit"
+"link": null,
+"text": null
 },
 "history": {
 "link": null,

@@ -4,7 +4,6 @@ bookdown::gitbook:
     toc:
       before: |
         <li><a href="./">Applied Quantitative Bias Analysis</a></li>
-    edit: https://github.com/jeremy-p-b/qba-applied
     download: ["pdf", "epub"]
 bookdown::pdf_book:
   includes:
