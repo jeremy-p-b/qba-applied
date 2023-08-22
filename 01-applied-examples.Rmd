@@ -4,14 +4,14 @@ In "*Applying quantitative bias analysis in clinical and epidemiological studies
 
 ## Bias formulas for selection bias
 
-In a cohort study of pregnant women investigating the association between maternal lithium use, relative to non-use, and cardiac malformations in live-born infants, a covariate-adjusted risk ratio was estimated of 1.65 (95% CI, 1.02-2.68).[@patorno2017lithium] Live-born infants only were included in the study and as such there was potential for selection bias if there were differences in termination probabilities of foetuses with cardiac malformations by exposure group. 
+In a cohort study of pregnant women investigating the association between maternal lithium use, relative to non-use, and cardiac malformations in live-born infants, a covariate-adjusted risk ratio was estimated of 1.65 (95% CI, 1.02-2.68).[@patorno2017lithium] Only live-born infants only were included in the study, and as such there was potential for selection bias if there were differences in termination probabilities of foetuses with cardiac malformations by exposure group. 
 
 Given that the outcome was rare, and therefore odds ratios and risk ratios are approximately equivalent, bias formulas using odds ratios were applied.[@greenland1996basic] 
 
 $$
 OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
 $$
-Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e. 20% probability of termination). The selection probability of unexposed with cardiac malformation was varied from 0.5 to 0.7. (30-50% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0% to -10%).
+Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e. 20% probability of termination). The selection probability of unexposed with cardiac malformations was varied from 0.5 to 0.7. (30-50% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0% to -10% difference).
 
 
 ```{r bias-adj, fig.align='center', message=FALSE, fig.cap="Bias-adjusted risk ratio for different assumed selection probabilities"}
@@ -144,7 +144,7 @@ ggplot(aes(x=x, y=y), data=sensitivity_data) + geom_area(fill="lightblue") +
   )
 ```
 
-Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for the positive and negative predictive value (Figure \@ref(fig:triangular)). 
+Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for sensitivity and specificity (Figure \@ref(fig:triangular)). 
 
 Values were repeatedly sampled at random 1,000 times from these distributions and these sampled values were used to calculate a distribution of bias-adjusted estimates. The median bias-adjusted estimate was 1.06 with 95% simulation interval 0.92-1.22.
 

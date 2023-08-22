@@ -57,6 +57,8 @@ set in the _output.yml file.</p>" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -187,7 +189,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.2.2" data-path="additional-examples.html"><a href="additional-examples.html#record-level-correction"><i class="fa fa-check"></i><b>3.2.2</b> Record-level correction</a></li>
 <li class="chapter" data-level="3.2.3" data-path="additional-examples.html"><a href="additional-examples.html#probabalistic-bias-analysis"><i class="fa fa-check"></i><b>3.2.3</b> Probabalistic bias analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="additional-examples.html"><a href="additional-examples.html#unmeasured-confounding"><i class="fa fa-check"></i><b>3.3</b> Unmeasured confounding</a></li>
+<li class="chapter" data-level="3.3" data-path="additional-examples.html"><a href="additional-examples.html#unmeasured-confounding"><i class="fa fa-check"></i><b>3.3</b> Unmeasured confounding</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="additional-examples.html"><a href="additional-examples.html#bias-formula"><i class="fa fa-check"></i><b>3.3.1</b> Bias formula</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="additional-examples.html"><a href="additional-examples.html#multiple-biases"><i class="fa fa-check"></i><b>3.4</b> Multiple biases</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
@@ -212,12 +218,12 @@ div.csl-indent {
 <p>In “<em>Applying quantitative bias analysis in clinical and epidemiological studies using quantitative bias analysis</em>” we present three applied examples of bias formulas, bounding methods, and probabilistic bias analysis. Code to generate results for these applied examples is presented below.</p>
 <div id="bias-formulas-for-selection-bias" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Bias formulas for selection bias<a href="applied-examples.html#bias-formulas-for-selection-bias" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In a cohort study of pregnant women investigating the association between maternal lithium use, relative to non-use, and cardiac malformations in live-born infants, a covariate-adjusted risk ratio was estimated of 1.65 (95% CI, 1.02-2.68).<span class="citation">(<a href="#ref-patorno2017lithium">Patorno et al. 2017</a>)</span> Live-born infants only were included in the study and as such there was potential for selection bias if there were differences in termination probabilities of foetuses with cardiac malformations by exposure group.</p>
+<p>In a cohort study of pregnant women investigating the association between maternal lithium use, relative to non-use, and cardiac malformations in live-born infants, a covariate-adjusted risk ratio was estimated of 1.65 (95% CI, 1.02-2.68).<span class="citation">(<a href="#ref-patorno2017lithium">Patorno et al. 2017</a>)</span> Only live-born infants only were included in the study, and as such there was potential for selection bias if there were differences in termination probabilities of foetuses with cardiac malformations by exposure group.</p>
 <p>Given that the outcome was rare, and therefore odds ratios and risk ratios are approximately equivalent, bias formulas using odds ratios were applied.<span class="citation">(<a href="#ref-greenland1996basic">Greenland 1996</a>)</span></p>
 <p><span class="math display">\[
 OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
 \]</span>
-Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e. 20% probability of termination). The selection probability of unexposed with cardiac malformation was varied from 0.5 to 0.7. (30-50% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0% to -10%).</p>
+Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e. 20% probability of termination). The selection probability of unexposed with cardiac malformations was varied from 0.5 to 0.7. (30-50% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0% to -10% difference).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="applied-examples.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="applied-examples.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-3"><a href="applied-examples.html#cb1-3" tabindex="-1"></a></span>
@@ -331,7 +337,7 @@ Figure 2.3: E-value plot for point estimate
 Figure 2.4: Triangular distribution for sensitivity
 </p>
 </div>
-<p>Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for the positive and negative predictive value (Figure <a href="applied-examples.html#fig:triangular">2.4</a>).</p>
+<p>Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for sensitivity and specificity (Figure <a href="applied-examples.html#fig:triangular">2.4</a>).</p>
 <p>Values were repeatedly sampled at random 1,000 times from these distributions and these sampled values were used to calculate a distribution of bias-adjusted estimates. The median bias-adjusted estimate was 1.06 with 95% simulation interval 0.92-1.22.</p>
 
 </div>

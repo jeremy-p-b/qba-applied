@@ -6,6 +6,11 @@ tab:unnamed-chunk-7
 tab:unnamed-chunk-8
 tab:unnamed-chunk-9
 tab:unnamed-chunk-11
+tab:unnamed-chunk-12
+tab:unnamed-chunk-13
+fig:unnamed-chunk-17
+tab:unnamed-chunk-18
+tab:unnamed-chunk-19
 about
 applied-examples
 bias-formulas-for-selection-bias
@@ -20,10 +25,5 @@ bias-formulas-1
 record-level-correction
 probabalistic-bias-analysis
 unmeasured-confounding
-tab:unnamed-chunk-137
-tab:unnamed-chunk-138
-tab:unnamed-chunk-139
-tab:unnamed-chunk-141
-tab:unnamed-chunk-5
-tab:unnamed-chunk-6
-tab:unnamed-chunk-10
+bias-formula
+multiple-biases

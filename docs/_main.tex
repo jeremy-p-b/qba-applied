@@ -106,6 +106,20 @@
 \usepackage{booktabs}
 \usepackage[numbers]{natbib}
 \setcitestyle{numbers,square}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -121,7 +135,7 @@
   pdfcreator={LaTeX via pandoc}}
 
 \title{Code for Quantitative Bias Analysis}
-\author{Jeremy Brown}
+\author{\href{https://twitter.com/jeremy_pbrown}{Jeremy Brown}}
 \date{}
 
 \begin{document}
@@ -134,7 +148,7 @@
 \hypertarget{about}{%
 \chapter{About}\label{about}}
 
-This site contains code for the \protect\hyperlink{applied-examples}{applied examples} in the article ``\emph{Quantifying possible bias in clinical and epidemiological studies using quantitative bias analysis}'' in addition to illustrative code to conduct alternative quantitative bias analyses.
+This site contains code for the applied examples in the article ``\emph{Quantifying possible bias in clinical and epidemiological studies using quantitative bias analysis}'' in addition to illustrative example code to conduct alternative quantitative bias analyses.
 
 \hypertarget{applied-examples}{%
 \chapter{Applied examples}\label{applied-examples}}
@@ -144,14 +158,14 @@ In ``\emph{Applying quantitative bias analysis in clinical and epidemiological s
 \hypertarget{bias-formulas-for-selection-bias}{%
 \section{Bias formulas for selection bias}\label{bias-formulas-for-selection-bias}}
 
-In a cohort study of pregnant women investigating the association between maternal lithium use, relative to non-use, and cardiac malformations in live-born infants, a covariate-adjusted risk ratio was estimated of 1.65 (95\% CI, 1.02-2.68).\citep{patorno2017lithium} Live-born infants only were included in the study and as such there was potential for selection bias if there were differences in termination probabilities of foetuses with cardiac malformations by exposure group.
+In a cohort study of pregnant women investigating the association between maternal lithium use, relative to non-use, and cardiac malformations in live-born infants, a covariate-adjusted risk ratio was estimated of 1.65 (95\% CI, 1.02-2.68).\citep{patorno2017lithium} Only live-born infants only were included in the study, and as such there was potential for selection bias if there were differences in termination probabilities of foetuses with cardiac malformations by exposure group.
 
 Given that the outcome was rare, and therefore odds ratios and risk ratios are approximately equivalent, bias formulas using odds ratios were applied.\citep{greenland1996basic}
 
 \[
 OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
 \]
-Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e.~20\% probability of termination). The selection probability of unexposed with cardiac malformation was varied from 0.5 to 0.7. (30-50\% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0\% to -10\%).
+Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e.~20\% probability of termination). The selection probability of unexposed with cardiac malformations was varied from 0.5 to 0.7. (30-50\% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0\% to -10\% difference).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -288,14 +302,14 @@ In a cohort study of pregnant women conducted using insurance claims data, the o
 \caption{Triangular distribution for sensitivity}\label{fig:triangular}
 \end{figure}
 
-Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for the positive and negative predictive value (Figure \ref{fig:triangular}).
+Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for sensitivity and specificity (Figure \ref{fig:triangular}).
 
 Values were repeatedly sampled at random 1,000 times from these distributions and these sampled values were used to calculate a distribution of bias-adjusted estimates. The median bias-adjusted estimate was 1.06 with 95\% simulation interval 0.92-1.22.
 
 \hypertarget{additional-examples}{%
 \chapter{Additional example applications}\label{additional-examples}}
 
-We will present here examples of quantitative bias analysis using simulated participant-level data for a cohort study with a binary treatment, binary outcome, and binary confounder.
+We present here examples of quantitative bias analysis using simulated participant-level data for a cohort study with a binary treatment, binary outcome, and binary confounder.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -310,7 +324,7 @@ We will present here examples of quantitative bias analysis using simulated part
 \hypertarget{selection-bias}{%
 \section{Selection bias}\label{selection-bias}}
 
-In the simulated data we have a binary treatment \(a\), binary confounder \(x\), outcome \(y\), and a binary indicator for selection into the study \(s\).
+In the simulated data we have a binary treatment \(A\), binary confounder \(X\), outcome \(Y\), and a binary indicator for selection into the study \(S\). A copy of the simulated data can be downloaded from \href{https://github.com/jeremy-p-b/qba-applied/tree/main/data}{GitHub}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -330,7 +344,7 @@ In the simulated data we have a binary treatment \(a\), binary confounder \(x\),
 ## 5     0     0     0     1
 \end{verbatim}
 
-The data was generated such that the causal odds ratio between treatment and outcome was 2. However, in a given sample the estimate may differ due to random error. If we observed a random sample from the target population we could unbiasedly estimate the odds ratio using logistic regression.
+The data was generated such that the causal conditional odds ratio between treatment and outcome was 2. However, in a given sample the estimate may differ due to random error. If we observed a random sample from the target population we could unbiasedly estimate the odds ratio using logistic regression.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -477,6 +491,14 @@ Alternatively, we can weight the individual records by the inverse probability o
 \end{Highlighting}
 \end{Shaded}
 
+\begin{tabular}{r|r|r}
+\hline
+estimate & conf.low & conf.high\\
+\hline
+2.031339 & 1.920888 & 2.135751\\
+\hline
+\end{tabular}
+
 If we expect selection probabilities to differ within levels of covariates then we can specify different selection probabilities for different strata of covariates.
 
 \hypertarget{misclassification}{%
@@ -484,7 +506,7 @@ If we expect selection probabilities to differ within levels of covariates then 
 
 We will now consider some quantitative bias analysis methods for misclassification of a binary outcome. Similar approaches can be applied for misclassification of a binary exposure.
 
-With differential misclassification of the outcome, \(m_y\), the odds ratio is biased.
+With differential misclassification of the outcome, the odds ratio is biased.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -524,66 +546,35 @@ estimate & conf.low & conf.high\\
 
 Bias formulas for misclassification typically apply to 2x2 tables or 2x2 tables stratified by covariates and require us to specify the bias parameters of sensitivity and specificity. Given that the data was simulated, we know that sensitivity and specificity among the treated were 80\% and 99\%, and that sensitivity and specificity among the unexposed were 100\%. In practice, we do not know these values, but can estimate them using validation studies and specify a range or, for probabilistic bias analysis, distribution of plausible values.
 
-\begin{tabular}{l|l|l}
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-12}Observed 2x2 table}
+\centering
+\begin{tabular}[t]{>{}l|l|l}
 \hline
-  & A.1 & A.0\\
+ & A=1 & A=0\\
 \hline
-Y*=1 & a & b\\
+\textbf{Y*=1} & a & b\\
 \hline
-Y*=0 & c & d\\
+\textbf{Y*=0} & c & d\\
 \hline
 \end{tabular}
+\end{table}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# create 2x2 table stratified by confounder}
-\NormalTok{two\_by\_two }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{tabyl}\NormalTok{(m\_y,a, x) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{adorn\_title}\NormalTok{()}
+\begin{table}
 
-\CommentTok{\# 2x2 among those without the confounder}
-\FunctionTok{print}\NormalTok{(}\StringTok{"Without confounder"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "Without confounder"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{two\_by\_two[[}\DecValTok{1}\NormalTok{]] }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##          a      
-##  m_y     0     1
-##    0 57291 18078
-##    1  2982  1720
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# 2x2 among those with the confounder}
-\FunctionTok{print}\NormalTok{(}\StringTok{"With confounder"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "With confounder"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{two\_by\_two[[}\DecValTok{2}\NormalTok{]] }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##         a     
-##  m_y    0    1
-##    0 9138 8503
-##    1  932 1356
-\end{verbatim}
+\caption{\label{tab:unnamed-chunk-13}Corrected 2x2 table}
+\centering
+\begin{tabular}[t]{>{}l|l|l}
+\hline
+ & A=1 & A=0\\
+\hline
+\textbf{Y=1} & A & B\\
+\hline
+\textbf{Y=0} & C & D\\
+\hline
+\end{tabular}
+\end{table}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -595,42 +586,305 @@ Y*=0 & c & d\\
 
 \CommentTok{\# define function to correct 2x2 table}
 \NormalTok{correct\_two\_by\_two }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(a, b, c, d, sensitivity\_a0, sensitivity\_a1, specificity\_a0, specificity\_a1) \{}
-  
+\NormalTok{  A }\OtherTok{\textless{}{-}}\NormalTok{ (a }\SpecialCharTok{{-}}\NormalTok{ (a }\SpecialCharTok{+}\NormalTok{ c)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{specificity\_a1))}\SpecialCharTok{/}\NormalTok{(sensitivity\_a1 }\SpecialCharTok{+}\NormalTok{ specificity\_a1 }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{  B }\OtherTok{\textless{}{-}}\NormalTok{ (b }\SpecialCharTok{{-}}\NormalTok{ (b }\SpecialCharTok{+}\NormalTok{ d)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{specificity\_a0))}\SpecialCharTok{/}\NormalTok{(sensitivity\_a0 }\SpecialCharTok{+}\NormalTok{ specificity\_a0 }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{  C }\OtherTok{\textless{}{-}}\NormalTok{ a }\SpecialCharTok{+}\NormalTok{ c }\SpecialCharTok{{-}}\NormalTok{ A}
+\NormalTok{  D }\OtherTok{\textless{}{-}}\NormalTok{ b }\SpecialCharTok{+}\NormalTok{ d }\SpecialCharTok{{-}}\NormalTok{ B}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"A"}\OtherTok{=}\NormalTok{A,}\StringTok{"B"}\OtherTok{=}\NormalTok{B,}\StringTok{"C"}\OtherTok{=}\NormalTok{C,}\StringTok{"D"}\OtherTok{=}\NormalTok{D))}
 \NormalTok{\}}
 
-\CommentTok{\# extract values from 2x2 tables}
-\NormalTok{a\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
-\NormalTok{b\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
-\NormalTok{c\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
-\NormalTok{d\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{1}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
-\NormalTok{a\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
-\NormalTok{b\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
-\NormalTok{c\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
-\NormalTok{d\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ two\_by\_two[[}\DecValTok{2}\NormalTok{]][}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.integer}\NormalTok{()}
+\CommentTok{\# extract 2x2 table values}
+\NormalTok{a\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{b\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{c\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{d\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{a\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{b\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{c\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{d\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
 
 \CommentTok{\# correct 2x2 table }
-\FunctionTok{correct\_two\_by\_two}\NormalTok{(a\_x0, b\_x0, c\_x0, d\_x0, sensitivity\_a0, sensitivity\_a1, specificity\_a0, specificity\_a1)}
+\NormalTok{corr\_two\_by\_two\_x0 }\OtherTok{\textless{}{-}} \FunctionTok{correct\_two\_by\_two}\NormalTok{(a\_x0, b\_x0, c\_x0, d\_x0, sensitivity\_a0, sensitivity\_a1, specificity\_a0, specificity\_a1)}
+\NormalTok{corr\_two\_by\_two\_x1 }\OtherTok{\textless{}{-}} \FunctionTok{correct\_two\_by\_two}\NormalTok{(a\_x1, b\_x1, c\_x1, d\_x1, sensitivity\_a0, sensitivity\_a1, specificity\_a0, specificity\_a1)}
+
+\CommentTok{\# extract corrected 2x2 table values}
+\NormalTok{A\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{B\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{C\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{D\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{4}\NormalTok{]]}
+\NormalTok{A\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{B\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{C\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{D\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{4}\NormalTok{]]}
+
+\CommentTok{\# calculate Mantel{-}Haenszel odds ratio}
+\NormalTok{numerator }\OtherTok{\textless{}{-}}\NormalTok{ A\_x1}\SpecialCharTok{*}\NormalTok{D\_x1}\SpecialCharTok{/}\NormalTok{(A\_x1 }\SpecialCharTok{+}\NormalTok{ B\_x1 }\SpecialCharTok{+}\NormalTok{ C\_x1 }\SpecialCharTok{+}\NormalTok{ D\_x1) }\SpecialCharTok{+}\NormalTok{ A\_x0}\SpecialCharTok{*}\NormalTok{D\_x0}\SpecialCharTok{/}\NormalTok{(A\_x0 }\SpecialCharTok{+}\NormalTok{ B\_x0 }\SpecialCharTok{+}\NormalTok{ C\_x0 }\SpecialCharTok{+}\NormalTok{ D\_x0)}
+\NormalTok{denominator }\OtherTok{\textless{}{-}}\NormalTok{ B\_x1}\SpecialCharTok{*}\NormalTok{C\_x1}\SpecialCharTok{/}\NormalTok{(A\_x1 }\SpecialCharTok{+}\NormalTok{ B\_x1 }\SpecialCharTok{+}\NormalTok{ C\_x1 }\SpecialCharTok{+}\NormalTok{ D\_x1) }\SpecialCharTok{+}\NormalTok{ B\_x0}\SpecialCharTok{*}\NormalTok{C\_x0}\SpecialCharTok{/}\NormalTok{(A\_x0 }\SpecialCharTok{+}\NormalTok{ B\_x0 }\SpecialCharTok{+}\NormalTok{ C\_x0 }\SpecialCharTok{+}\NormalTok{ D\_x0)}
+
+\NormalTok{mh\_estimate }\OtherTok{\textless{}{-}}\NormalTok{ numerator}\SpecialCharTok{/}\NormalTok{denominator}
+\FunctionTok{print}\NormalTok{(mh\_estimate)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## NULL
+## [1] 2.003725
 \end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# calculate }
-\end{Highlighting}
-\end{Shaded}
+We can use bootstrapping to calculate a confidence interval.
 
 \hypertarget{record-level-correction}{%
 \subsection{Record-level correction}\label{record-level-correction}}
 
+For record-level correction we can as before calculate two by two tables, but as a second step use these to calculate predictive values which we can use to impute a \emph{corrected} exposure.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# calculate predictive values}
+\NormalTok{ppv\_a1\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ sensitivity\_a1}\SpecialCharTok{*}\NormalTok{A\_x1}\SpecialCharTok{/}\NormalTok{a\_x1}
+\NormalTok{ppv\_a0\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ sensitivity\_a0}\SpecialCharTok{*}\NormalTok{B\_x1}\SpecialCharTok{/}\NormalTok{b\_x1}
+\NormalTok{npv\_a1\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ specificity\_a1}\SpecialCharTok{*}\NormalTok{C\_x1}\SpecialCharTok{/}\NormalTok{c\_x1}
+\NormalTok{npv\_a0\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ specificity\_a0}\SpecialCharTok{*}\NormalTok{D\_x1}\SpecialCharTok{/}\NormalTok{d\_x1 }
+\NormalTok{ppv\_a1\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ sensitivity\_a1}\SpecialCharTok{*}\NormalTok{A\_x0}\SpecialCharTok{/}\NormalTok{a\_x0}
+\NormalTok{ppv\_a0\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ sensitivity\_a0}\SpecialCharTok{*}\NormalTok{B\_x0}\SpecialCharTok{/}\NormalTok{b\_x0}
+\NormalTok{npv\_a1\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ specificity\_a1}\SpecialCharTok{*}\NormalTok{C\_x0}\SpecialCharTok{/}\NormalTok{c\_x0}
+\NormalTok{npv\_a0\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ specificity\_a0}\SpecialCharTok{*}\NormalTok{D\_x0}\SpecialCharTok{/}\NormalTok{d\_x0 }
+
+\CommentTok{\# impute outcome}
+\NormalTok{misclassified\_data }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{y =} \FunctionTok{rbinom}\NormalTok{(}\DecValTok{100000}\NormalTok{, }\DecValTok{1}\NormalTok{, ppv\_a1\_x1}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{m\_y}\SpecialCharTok{*}\NormalTok{x }\SpecialCharTok{+}\NormalTok{ ppv\_a0\_x1}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{m\_y}\SpecialCharTok{*}\NormalTok{x }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{npv\_a1\_x1)}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{m\_y)}\SpecialCharTok{*}\NormalTok{x }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{npv\_a0\_x1)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{m\_y)}\SpecialCharTok{*}\NormalTok{x }\SpecialCharTok{+}\NormalTok{ ppv\_a1\_x0}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{m\_y}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x) }\SpecialCharTok{+}\NormalTok{ ppv\_a0\_x0}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{m\_y}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{npv\_a1\_x0)}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{m\_y)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{npv\_a0\_x0)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{m\_y)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x)))}
+
+\CommentTok{\# fit a logistic regression model using imputed exposure}
+\FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ a }\SpecialCharTok{+}\NormalTok{ x, }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{, }\AttributeTok{data=}\NormalTok{misclassified\_data) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tidy}\NormalTok{(}\AttributeTok{exponentiate=}\ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"a"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(estimate)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   estimate
+##      <dbl>
+## 1     2.01
+\end{verbatim}
+
 \hypertarget{probabalistic-bias-analysis}{%
 \subsection{Probabalistic bias analysis}\label{probabalistic-bias-analysis}}
 
+Rather than specify a single or range of values for the bias parameters of sensitivity and specificity we can instead specify probability distributions for these parameters and apply probabilistic bias analysis. Here for simplicity we will assume the distributions are not correlated, but we could also generate correlated bias parameters.\citep{fox2022applying} We use bootstrapping to incorporate random error.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(EnvStats)}
+
+\CommentTok{\# draw bias parameters from triangular distributions}
+\NormalTok{sensitivity\_a1 }\OtherTok{\textless{}{-}} \FunctionTok{rtri}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{min=}\FloatTok{0.75}\NormalTok{, }\AttributeTok{mode=}\FloatTok{0.8}\NormalTok{, }\AttributeTok{max=}\FloatTok{0.85}\NormalTok{)}
+\NormalTok{specificity\_a1 }\OtherTok{\textless{}{-}} \FunctionTok{rtri}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{min=}\FloatTok{0.985}\NormalTok{, }\AttributeTok{mode=}\FloatTok{0.99}\NormalTok{, }\AttributeTok{max=}\FloatTok{0.995}\NormalTok{)}
+
+\CommentTok{\# specify fixed bias parameters}
+\NormalTok{sensitivity\_a0 }\OtherTok{\textless{}{-}}  \DecValTok{1}
+\NormalTok{specificity\_a0 }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\CommentTok{\# set seed for random number generator (for reproducibility)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2041}\NormalTok{)}
+
+\NormalTok{estimates }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1000}\NormalTok{) \{}
+  
+\NormalTok{  bootstrap\_indices }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(misclassified\_data), }\FunctionTok{nrow}\NormalTok{(misclassified\_data), }\AttributeTok{replace=}\ConstantTok{TRUE}\NormalTok{)}
+  
+  \CommentTok{\# extract 2x2 table values}
+\NormalTok{  a\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{  b\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{  c\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{  d\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{  a\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{  b\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{  c\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{  d\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ misclassified\_data[bootstrap\_indices,] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, x}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+  
+  \CommentTok{\# calculate corrected 2x2 table}
+\NormalTok{  corr\_two\_by\_two\_x0 }\OtherTok{\textless{}{-}} \FunctionTok{correct\_two\_by\_two}\NormalTok{(a\_x0, b\_x0, c\_x0, d\_x0, sensitivity\_a0, sensitivity\_a1[i], specificity\_a0, specificity\_a1[i])}
+\NormalTok{  corr\_two\_by\_two\_x1 }\OtherTok{\textless{}{-}} \FunctionTok{correct\_two\_by\_two}\NormalTok{(a\_x1, b\_x1, c\_x1, d\_x1, sensitivity\_a0, sensitivity\_a1[i], specificity\_a0, specificity\_a1[i])}
+  
+  \CommentTok{\# extract corrected 2x2 table values}
+\NormalTok{  A\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{  B\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{  C\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{  D\_x0 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x0[[}\DecValTok{4}\NormalTok{]]}
+\NormalTok{  A\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{  B\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{  C\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{  D\_x1 }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two\_x1[[}\DecValTok{4}\NormalTok{]]}
+
+  \CommentTok{\# calculate Mantel{-}Haenszel odds ratio}
+\NormalTok{  numerator }\OtherTok{\textless{}{-}}\NormalTok{ A\_x1}\SpecialCharTok{*}\NormalTok{D\_x1}\SpecialCharTok{/}\NormalTok{(A\_x1 }\SpecialCharTok{+}\NormalTok{ B\_x1 }\SpecialCharTok{+}\NormalTok{ C\_x1 }\SpecialCharTok{+}\NormalTok{ D\_x1) }\SpecialCharTok{+}\NormalTok{ A\_x0}\SpecialCharTok{*}\NormalTok{D\_x0}\SpecialCharTok{/}\NormalTok{(A\_x0 }\SpecialCharTok{+}\NormalTok{ B\_x0 }\SpecialCharTok{+}\NormalTok{ C\_x0 }\SpecialCharTok{+}\NormalTok{ D\_x0)}
+\NormalTok{  denominator }\OtherTok{\textless{}{-}}\NormalTok{ B\_x1}\SpecialCharTok{*}\NormalTok{C\_x1}\SpecialCharTok{/}\NormalTok{(A\_x1 }\SpecialCharTok{+}\NormalTok{ B\_x1 }\SpecialCharTok{+}\NormalTok{ C\_x1 }\SpecialCharTok{+}\NormalTok{ D\_x1) }\SpecialCharTok{+}\NormalTok{ B\_x0}\SpecialCharTok{*}\NormalTok{C\_x0}\SpecialCharTok{/}\NormalTok{(A\_x0 }\SpecialCharTok{+}\NormalTok{ B\_x0 }\SpecialCharTok{+}\NormalTok{ C\_x0 }\SpecialCharTok{+}\NormalTok{ D\_x0)}
+  
+\NormalTok{  estimates }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(estimates, }\FunctionTok{tibble\_row}\NormalTok{(}\AttributeTok{bias\_adj\_or =}\NormalTok{ numerator}\SpecialCharTok{/}\NormalTok{denominator))}
+\NormalTok{\}}
+
+\CommentTok{\# calculate median and 95\% simulation interval of bias{-}adjusted estimates}
+\FunctionTok{quantile}\NormalTok{(estimates}\SpecialCharTok{$}\NormalTok{bias\_adj\_or, }\FunctionTok{c}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.975}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     2.5%      50%    97.5% 
+## 1.830828 2.009066 2.206712
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# plot distribution of bias{-}adjusted estimates}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data=}\NormalTok{estimates) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_density}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{bias\_adj\_or), }\AttributeTok{fill=}\StringTok{"darkblue"}\NormalTok{, }\AttributeTok{alpha=}\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Bias{-}adjusted odds ratio"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{_main_files/figure-latex/unnamed-chunk-17-1} 
+
+}
+
+\caption{Distribution of bias-adjusted estimates}\label{fig:unnamed-chunk-17}
+\end{figure}
+
 \hypertarget{unmeasured-confounding}{%
 \section{Unmeasured confounding}\label{unmeasured-confounding}}
+
+If the confounder, \(X\), had not been measured then we would not be able to adjust for it, and our estimates would be biased.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# restrict data to selected subsample}
+\NormalTok{unmeasured\_confounder\_data }\OtherTok{\textless{}{-}}\NormalTok{ sim\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(a,y)}
+
+\CommentTok{\# fit logistic regression model without confounder}
+\NormalTok{lgr\_model\_confounded }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ a, }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{, }\AttributeTok{data=}\NormalTok{unmeasured\_confounder\_data)}
+
+\CommentTok{\# tidy model outputs}
+\NormalTok{or\_confounded }\OtherTok{\textless{}{-}}\NormalTok{ lgr\_model\_confounded }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tidy}\NormalTok{(}\AttributeTok{exponentiate=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{conf.int=}\ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"a"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(estimate, conf.low, conf.high) }
+
+\CommentTok{\# output as table}
+\NormalTok{or\_confounded }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Estimated odds ratio with unmeasured confounder"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-18}Estimated odds ratio with unmeasured confounder}
+\centering
+\begin{tabular}[t]{r|r|r}
+\hline
+estimate & conf.low & conf.high\\
+\hline
+2.321895 & 2.213997 & 2.434989\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{bias-formula}{%
+\subsection{Bias formula}\label{bias-formula}}
+
+Given that the outcome is rare we can apply a bias formula for the risk ratio.
+
+\[
+RR_{ZY}^{BiasAdj} = RR_{ZY}^{Obs}\frac{1 + P(U=1|Z=0)(RR_{UY|Z}-1)}{1 + P(U=1|Z=1)(RR_{UY|Z}-1)}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# define bias parameter}
+\NormalTok{PU1 }\OtherTok{\textless{}{-}} \FloatTok{0.33}
+\NormalTok{PU0 }\OtherTok{\textless{}{-}} \FloatTok{0.14}
+\NormalTok{RR\_UY }\OtherTok{\textless{}{-}} \DecValTok{2}
+
+\CommentTok{\# define function to calculate bias{-}adjusted risk ratio}
+\NormalTok{uconf\_bias\_adj\_rr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(rr\_zy, pu1, pu0, rr\_uy) \{}
+\NormalTok{  bias\_adj\_rr }\OtherTok{\textless{}{-}}\NormalTok{ rr\_zy }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ pu0}\SpecialCharTok{*}\NormalTok{(rr\_uy }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ pu1}\SpecialCharTok{*}\NormalTok{(rr\_uy }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))}
+  \FunctionTok{return}\NormalTok{(bias\_adj\_rr)}
+\NormalTok{\}}
+
+\CommentTok{\# calculate bias{-}adjusted odds ratios}
+\NormalTok{or\_confounded }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{c}\NormalTok{(estimate, conf.low, conf.high), }\SpecialCharTok{\textasciitilde{}} \FunctionTok{uconf\_bias\_adj\_rr}\NormalTok{(.x, }\FloatTok{0.33}\NormalTok{, }\FloatTok{0.14}\NormalTok{, }\DecValTok{2}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Bias{-}adjusted odds ratio for unmeasured confounding"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-19}Bias-adjusted odds ratio for unmeasured confounding}
+\centering
+\begin{tabular}[t]{r|r|r}
+\hline
+estimate & conf.low & conf.high\\
+\hline
+1.990196 & 1.897711 & 2.087134\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{multiple-biases}{%
+\section{Multiple biases}\label{multiple-biases}}
+
+Finally, we consider a setting with both selection bias, misclassification, and unmeasured confounding.First, we correct for misclassification and selection to estimate the crude odds ratio, then we apply a bias formula to adjust for confounding bias.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{multiple\_bias\_data }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/simulated\_data.csv"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(s}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(a,m\_y) }
+
+\CommentTok{\# specify bias parameters}
+\NormalTok{sensitivity\_a0 }\OtherTok{\textless{}{-}}  \DecValTok{1}
+\NormalTok{sensitivity\_a1 }\OtherTok{\textless{}{-}} \FloatTok{0.8}
+\NormalTok{specificity\_a0 }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{specificity\_a1 }\OtherTok{\textless{}{-}} \FloatTok{0.99}
+
+\DocumentationTok{\#\# record{-}level correction for misclassification}
+\CommentTok{\# extract 2x2 table values}
+\NormalTok{a }\OtherTok{\textless{}{-}}\NormalTok{ multiple\_bias\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{b }\OtherTok{\textless{}{-}}\NormalTok{ multiple\_bias\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{c }\OtherTok{\textless{}{-}}\NormalTok{ multiple\_bias\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+\NormalTok{d }\OtherTok{\textless{}{-}}\NormalTok{ multiple\_bias\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(m\_y}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, a}\SpecialCharTok{==}\DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{nrow}\NormalTok{()}
+
+\CommentTok{\# correct 2x2 table }
+\NormalTok{corr\_two\_by\_two }\OtherTok{\textless{}{-}} \FunctionTok{correct\_two\_by\_two}\NormalTok{(a, b, c, d, sensitivity\_a0, sensitivity\_a1, specificity\_a0, specificity\_a1)}
+
+\CommentTok{\# extract corrected 2x2 table values}
+\NormalTok{A }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{B }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two[[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{C }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two[[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{D }\OtherTok{\textless{}{-}}\NormalTok{ corr\_two\_by\_two[[}\DecValTok{4}\NormalTok{]]}
+
+\CommentTok{\# calculate predictive values}
+\NormalTok{ppv\_a1 }\OtherTok{\textless{}{-}}\NormalTok{ sensitivity\_a1}\SpecialCharTok{*}\NormalTok{A}\SpecialCharTok{/}\NormalTok{a}
+\NormalTok{ppv\_a0 }\OtherTok{\textless{}{-}}\NormalTok{ sensitivity\_a0}\SpecialCharTok{*}\NormalTok{B}\SpecialCharTok{/}\NormalTok{b}
+\NormalTok{npv\_a1 }\OtherTok{\textless{}{-}}\NormalTok{ specificity\_a1}\SpecialCharTok{*}\NormalTok{C}\SpecialCharTok{/}\NormalTok{c}
+\NormalTok{npv\_a0 }\OtherTok{\textless{}{-}}\NormalTok{ specificity\_a0}\SpecialCharTok{*}\NormalTok{D}\SpecialCharTok{/}\NormalTok{d}
+
+\CommentTok{\# impute outcome}
+\NormalTok{multiple\_bias\_data }\OtherTok{\textless{}{-}}\NormalTok{ multiple\_bias\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{y =} \FunctionTok{rbinom}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(multiple\_bias\_data), }\DecValTok{1}\NormalTok{, ppv\_a1}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{m\_y }\SpecialCharTok{+}\NormalTok{ ppv\_a0}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{m\_y }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{npv\_a1)}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{m\_y) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{npv\_a0)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{m\_y)))}
+
+\CommentTok{\# calculate crude odds{-}ratio}
+\NormalTok{multiple\_bias\_lgr }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ a,  }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{, }\AttributeTok{data=}\NormalTok{multiple\_bias\_data) }
+\NormalTok{or\_adj\_misc }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(multiple\_bias\_lgr)[}\StringTok{"a"}\NormalTok{] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{exp}\NormalTok{()}
+  
+\CommentTok{\# correct odds ratio for selection bias}
+\NormalTok{or\_adj\_sel }\OtherTok{\textless{}{-}}\NormalTok{ or\_adj\_misc }\SpecialCharTok{*}\NormalTok{ (S01}\SpecialCharTok{*}\NormalTok{S10)}\SpecialCharTok{/}\NormalTok{(S11}\SpecialCharTok{*}\NormalTok{S00)}
+
+\CommentTok{\# apply bias formula for confounding}
+\FunctionTok{uconf\_bias\_adj\_rr}\NormalTok{(or\_adj\_sel, }\FloatTok{0.33}\NormalTok{, }\FloatTok{0.14}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        a 
+## 1.942437
+\end{verbatim}
 
   \bibliography{book.bib}
 

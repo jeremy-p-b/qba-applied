@@ -1,6 +1,6 @@
 --- 
 title: "Code for Quantitative Bias Analysis"
-author: "Jeremy Brown"
+author: "[Jeremy Brown](https://twitter.com/jeremy_pbrown)"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib]
@@ -16,7 +16,7 @@ github-repo: rstudio/bookdown-demo
 
 # About
 
-This site contains code for the [applied examples](#applied-examples) in the article "*Quantifying possible bias in clinical and epidemiological studies using quantitative bias analysis*"  in addition to illustrative code to conduct alternative quantitative bias analyses.
+This site contains code for the applied examples in the article "*Quantifying possible bias in clinical and epidemiological studies using quantitative bias analysis*"  in addition to illustrative example code to conduct alternative quantitative bias analyses.
 
 
 ```{r include=FALSE}
