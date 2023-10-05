@@ -48,3 +48,6 @@ rsconnect/
 # Bookdown outputs
 _book/
 _bookdown_files/
+
+# Apple files
+.DS_Store

@@ -24,7 +24,7 @@ sample_size <- 100000
 # define bias parameters
 prevalence_confounder_unexp <- 0.25
 confounder_treatment_rr <- 2
-confounder_outcome_rr <- 2
+confounder_outcome_or <- 2
 s11 <- 0.7
 s01 <- 1
 s10 <- 0.9
@@ -44,7 +44,7 @@ sim_data <- tibble(
   # treatment with prevalence among those without confounder of 25% and with confounder of 50% 
   a = rbinom(sample_size, 1, exp(log(prevalence_confounder_unexp) + log(confounder_treatment_rr)*x)), 
   # outcome 
-  y = rbinom(sample_size, 1, expit(log(0.05/0.95) + log(confounder_outcome_rr)*a + log(2)*x)),
+  y = rbinom(sample_size, 1, expit(log(0.05/0.95) + log(confounder_outcome_or)*a + log(2)*x)),
   # selection
   s = rbinom(sample_size, 1, s11*a*y + s01*(1-a)*y + s10*a*(1-y) + s00*(1-a)*(1-y)),
   # misclassified outcome
@@ -396,7 +396,7 @@ or_confounded %>%
 
 ## Multiple biases
 
-Finally, we consider a setting with both selection bias, misclassification, and unmeasured confounding.First, we correct for misclassification and selection to estimate the crude odds ratio, then we apply a bias formula to adjust for confounding bias.
+Finally, we consider a setting with both selection bias, misclassification, and unmeasured confounding. First, we correct for misclassification and selection to estimate the crude odds ratio, then we apply a bias formula to adjust for confounding.
 
 ```{r, warning=FALSE, message=FALSE}
 multiple_bias_data <- read_csv("data/simulated_data.csv") %>% filter(s==1) %>% select(a,m_y) 
