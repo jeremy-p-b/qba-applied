@@ -1,0 +1,616 @@
+---
+title: "combined"
+output: html_document
+date: "2024-01-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Applied examples {#applied-examples}
+
+In "*Applying quantitative bias analysis in clinical and epidemiological studies using quantitative bias analysis*" we present three applied examples of bias formulas, bounding methods, and probabilistic bias analysis. Code to generate results for these applied examples is presented below.
+
+## Bias formulas for selection bias
+
+In a cohort study of pregnant women investigating the association between maternal lithium use, relative to non-use, and cardiac malformations in live-born infants, a covariate-adjusted risk ratio was estimated of 1.65 (95% CI, 1.02-2.68).(Patorno 2017) Only live-born infants only were included in the study, and as such there was potential for selection bias if there were differences in termination probabilities of foetuses with cardiac malformations by exposure group. 
+
+Given that the outcome was rare, and therefore odds ratios and risk ratios are approximately equivalent, bias formulas using odds ratios were applied.(Greenland 1996) 
+
+$$
+OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
+$$
+Values for the bias parameters, selection probabilities by exposure and outcome status, were specified based on the literature. The selection probability of unexposed without cardiac malformations was assumed to be 0.8 (i.e. 20% probability of termination). The selection probability of unexposed with cardiac malformations was varied from 0.5 to 0.7. (30-50% probability of termination). Selection probabilities of exposed were defined by outcome status relative to unexposed (0% to -10% difference).
+
+
+```{r bias-adj, fig.align='center', message=FALSE, fig.cap="Bias-adjusted risk ratio for different assumed selection probabilities"}
+library(tidyverse)
+library(ggplot2)
+
+# Define observed odds ratio
+observed_rr <- 1.65
+
+# Define bias parameters
+S00 <- 0.8
+S01 <- c(0.5, 0.525, 0.55, 0.575, 0.6, 0.625, 0.65, 0.675, 0.7)
+differences <- c(0, -0.05, -0.1) 
+
+# Define function to calculate bias-adjusted risk ratio
+calc_bias_adj_or <- function(or, s01, s10, s00, s11) {
+  bias_adj_or <- or * (s01*s10)/(s00*s11)
+  return(bias_adj_or)
+}
+
+# Calculate bias-adjusted estimate for different values of bias parameters
+results <- NULL
+for (s01 in S01) {
+  for (diff in differences) {
+    bias_adj_rr <- calc_bias_adj_or(observed_rr, s01, S00 + diff, S00, s01 + diff)
+    results_row <- tibble_row(bias_adj_rr=bias_adj_rr, s01=s01, diff=as.character(diff))
+    results <- bind_rows(results, results_row)
+  }
+}
+
+# Tidy label for difference in selection probabilities
+results <- results %>% 
+  mutate(diff=factor(diff, levels=c("0", "-0.05", "-0.1"), labels=c("0", "-5%", "-10%")))
+
+# Plot figure of bias-adjusted estimates
+ggplot(data = results, aes(x=s01, y=bias_adj_rr, colour=diff)) + 
+  geom_line() + 
+  theme_minimal() +
+  ylim(1.4, 2) + 
+  scale_x_reverse() +
+  xlab("Selection probability of unexposed with cardiac malformations") + 
+  ylab("Bias-adjusted risk ratio") +
+  guides(colour=guide_legend(title="Difference in selection\nprobability of exposed")) +
+  theme(legend.title=element_text(size=10))
+```
+
+The bias-adjusted risk ratios ranged from 1.65 to 1.80, indicating robustness of the point estimate to selection bias under the given assumptions. We can likewise calculate bias-adjusted estimates for the lower bound of the confidence interval.
+
+```{r bias-adj-lb, fig.align='center', echo=FALSE, fig.cap="Bias-adjusted risk ratio for lower bound of 95% confidence interval for different assumed selection probabilities"}
+
+# Define observed odds ratio
+observed_rr <- 1.02
+
+# Calculate bias-adjusted estimate for different values of bias parameters
+results <- NULL
+for (s01 in S01) {
+  for (diff in differences) {
+    bias_adj_rr <- calc_bias_adj_or(observed_rr, s01, S00 + diff, S00, s01 + diff)
+    results_row <- tibble_row(bias_adj_rr=bias_adj_rr, s01=s01, diff=as.character(diff))
+    results <- bind_rows(results, results_row)
+  }
+}
+
+# Tidy label for difference in selection probabilities
+results <- results %>% 
+  mutate(diff=factor(diff, levels=c("0", "-0.05", "-0.1"), labels=c("0", "-5%", "-10%")))
+
+# Plot figure of bias-adjusted estimates
+ggplot(data = results, aes(x=s01, y=bias_adj_rr, colour=diff)) + 
+  geom_line() + 
+  theme_minimal() +
+  ylim(1.0, 1.6) + 
+  scale_x_reverse() +
+  xlab("Selection probability of unexposed with cardiac malformations") + 
+  ylab("Bias-adjusted risk ratio") +
+  guides(colour=guide_legend(title="Difference in selection\nprobability of exposed")) +
+  theme(legend.title=element_text(size=10))
+```
+
+
+## E-values for unmeasured confounding
+
+In a cohort study conducted in electronic health records investigating the association between proton pump inhibitors, relative to H2 receptor antagonists, and all-cause mortality, investigators found that individuals were at higher risk of death (covariate-adjusted hazard ratio [HR] 1.38, 95% CI 1.33-1.44).(Brown 2021) However, it was considered that there may be unmeasured confounding due to differences in frailty between individuals prescribed proton pump inhibitors. The prevalence of the unmeasured confounder was not known in either exposure group, and therefore rather than use bias formulas, an E-value was calculated.(Ding 2016)
+
+Given the outcome was rare, the E-value method can be applied to the hazard ratio. 
+
+$$
+\text{E-value} = RR_{Obs} + \sqrt{RR_{Obs}(RR_{Obs} -1)}
+$$
+
+We can use the [EValue](https://cran.r-project.org/web/packages/EValue/index.html) package to calculate E-Values.
+
+```{r}
+# load EValue package and ggplotify 
+library(EValue)
+
+#Calculate E-values
+evalues.HR(est=1.38, lo=1.33, hi=1.44, rare=TRUE) %>%  knitr::kable()
+```
+
+And we can use *bias_plot* from the *EValue* package to display an E-value plot.
+
+```{r, fig.align='center', fig.cap="E-value plot for point estimate"}
+# Generate E-value plot for point estimate
+bias_plot(1.38, xmax=9) 
+```
+
+The E-value for the point estimate was 2.10 and for the lower bound of the point estimate was 1.99. This represents the minimum strength of association that an unmeasured confounder would need to have with either exposure or outcome to reduce the hazard ratio to the null (i.e. 1). An unmeasured confounder with strength of association with exposure and outcome below the line in the plot could not possibly explain, on its own, the observed association.
+
+Risk ratios between frailty and mortality >2 have been observed in the literature, and as such we could not rule out unmeasured confounding as a possible explanation for findings based on the E-value. However, as we did not specify prevalence of an unmeasured confounder, we cannot say whether such confounding was likely to account for the observed association. There may also have been additional unmeasured or partially measured confounders contributing to the observed association.
+
+## Probabilistic bias analysis for misclassification
+
+In a cohort study of pregnant women conducted using insurance claims data, the observed covariate-adjusted risk ratio for the association between antidepressant use and congenital cardiac defects, was 1.02 (95% CI, 0.90-1.15).(Huybrechts 2014) Some misclassification of the outcome, congenital cardiac malformation was anticipated. Therefore, probabilistic bias analysis was carried out.(Fox 2005) Code is not provided for this analysis, which was carrier out using SAS and participant record-level data (see [sensmac](https://sites.google.com/site/biasanalysis/sensmac) macro for a SAS program to conduct this analysis).
+
+```{r triangular, echo=FALSE, message=FALSE, out.width="60%", fig.align='center', fig.cap="Triangular distribution for sensitivity"}
+library(EnvStats)
+sensitivity_data <- tibble(x=seq(0.5,1,0.001))
+sensitivity_data <- sensitivity_data %>% mutate(y=dtri(x, 0.5, 1, 0.75))
+
+ggplot(aes(x=x, y=y), data=sensitivity_data) + geom_area(fill="lightblue") + 
+  ylab("Probability density") +   
+  xlab("Sensitivity") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, max(sensitivity_data$y) + 0.2)) +
+  theme_classic() + theme(
+    axis.text.x = element_text(vjust = 1, size = 14, colour = "black"),
+    axis.text.y = element_text(hjust = 1, size = 14, colour = "black"),
+    legend.text= element_text(hjust = 1, size = 11, colour = "black", face="bold"),
+    axis.title = element_text(size=12, face="bold"),
+  )
+```
+
+Positive predictive values estimated in a validation study were used to specify distributions of values for the bias parameters of sensitivity and specificity. Investigators chose triangular distributions for sensitivity and specificity. 
+
+Values were repeatedly sampled at random 1,000 times from these distributions and these sampled values were used to calculate a distribution of bias-adjusted estimates. The median bias-adjusted estimate was 1.06 with 95% simulation interval 0.92-1.22.
+
+# Additional example applications {#additional-examples}
+
+We present here examples of quantitative bias analysis using simulated participant-level data for a cohort study with a binary treatment, binary outcome, and binary confounder.
+
+```{r, message=FALSE}
+# load packages
+require(tidyverse)
+require(ggplot2)
+library(broom) 
+library(janitor)
+```
+
+```{r, eval=FALSE, include=FALSE}
+
+# define expit function
+expit <- function(x) {
+  expit_result <- exp(x)/(1 + exp(x))
+  return(expit_result)
+}
+
+# define sample size
+sample_size <- 100000
+
+# define bias parameters
+prevalence_confounder_unexp <- 0.25
+confounder_treatment_rr <- 2
+confounder_outcome_or <- 2
+s11 <- 0.7
+s01 <- 1
+s10 <- 0.9
+s00 <- 1
+sensitivity_a0 <-  1
+sensitivity_a1 <- 0.8
+specificity_a0 <- 1
+specificity_a1 <- 0.99
+
+# set seed of random number generator
+set.seed(707)
+  
+# simulate data
+sim_data <- tibble(
+  # confounder with prevalence 20%
+  x = rbinom(sample_size, 1, 0.2), 
+  # treatment with prevalence among those without confounder of 25% and with confounder of 50% 
+  a = rbinom(sample_size, 1, exp(log(prevalence_confounder_unexp) + log(confounder_treatment_rr)*x)), 
+  # outcome 
+  y = rbinom(sample_size, 1, expit(log(0.05/0.95) + log(confounder_outcome_or)*a + log(2)*x)),
+  # selection
+  s = rbinom(sample_size, 1, s11*a*y + s01*(1-a)*y + s10*a*(1-y) + s00*(1-a)*(1-y)),
+  # misclassified outcome
+  m_y = rbinom(sample_size, 1, sensitivity_a0*y*(1-a) + sensitivity_a1*y*a + 
+                 (1-specificity_a0)*(1-y)*(1-a) + (1-specificity_a1)*a*(1-y))
+  )
+
+write_csv(sim_data, "simulated_data.csv")
+```
+
+## Selection bias
+
+In the simulated data we have a binary treatment $A$, binary confounder $X$, outcome $Y$, and a binary indicator for selection into the study $S$. A copy of the simulated data can be downloaded from [GitHub](https://github.com/jeremy-p-b/qba-applied/tree/main/data).
+
+```{r, message=FALSE}
+sim_data <- read_csv("simulated_data.csv") %>% select(x,a,y,s)
+sim_data  %>% head(5)
+```
+
+The data was generated such that the causal conditional odds ratio between treatment and outcome was 2. However, in a given sample the estimate may differ due to random error. If we observed a random sample from the target population we could unbiasedly estimate the odds ratio using logistic regression.
+
+```{r, message=FALSE}
+# fit logistic regression model
+lgr_model <- glm(y ~ x + a, data=sim_data, family="binomial") 
+
+# tidy model outputs
+or <- lgr_model %>% 
+  tidy(exponentiate=TRUE, conf.int=TRUE) %>% 
+  filter(term == "a") %>% 
+  select(estimate, conf.low, conf.high)
+
+# output as table
+or %>% 
+  knitr::kable(caption = "Estimated odds ratio")
+```
+However, if we consider that selection into the study was dependent on exposure and outcome and that we only observed a selected subsample of the target population, then the estimated odds ratio is biased.
+
+```{r}
+# restrict data to selected subsample
+selected_data <- sim_data %>% filter(s == 1)
+
+# fit logistic regression model
+lgr_model_selected <- glm(y ~ x + a, data=selected_data, family="binomial") 
+
+# tidy model outputs
+or_selected <- lgr_model_selected %>% 
+  tidy(exponentiate=TRUE, conf.int=TRUE) %>% 
+  filter(term == "a") %>% 
+  select(estimate, conf.low, conf.high) 
+
+# output as table
+or_selected %>%
+  knitr::kable(caption = "Estimated odds ratio in selected sample")
+```
+
+### Bias formulas
+
+One option is to apply bias formulas for the odds ratio.
+
+$$
+OR_{BiasAdjusted} = OR_{Observed}\frac{S_{01}S_{10}}{S_{00}S_{11}}
+$$
+Given that the data was simulated we know the selection probabilities ($S11=0.7$, $S01=1$, $S10=0.9$, $S00=1$) and can directly plug them in to estimate a bias-adjusted odds ratio. However, in practice we will not know these probabilities and will typically specify a range of values, or for probabilistic bias analysis a distribution of values. 
+
+```{r}
+# define bias parameters
+S11 <- 0.7
+S01 <- 1
+S10 <- 0.9
+S00 <- 1
+
+# apply bias formula
+bias_adjusted_or <- or_selected %>% 
+  mutate(across(c(estimate, conf.low, conf.high), ~ .x * (S01*S10)/(S11*S00)))
+
+# output as table
+bias_adjusted_or %>% 
+  knitr::kable(caption = "Bias-adjusted odds ratio")
+```
+
+### Weighting
+
+Alternatively, we can weight the individual records by the inverse probability of selection and use bootstapping to calculate a confidence interval
+
+```{r, warning=FALSE}
+library(boot)
+
+# Add weights
+selected_data_with_weights <- selected_data %>% 
+  mutate(prob_select = a*y*S11 + (1-a)*y*S01 + a*(1-y)*S10 + (1-a)*(1-y)*S00) %>%
+  mutate(inverse_prob = 1/prob_select) 
+
+# define function to estimate weighted odds ratio (needed for bootstrap function)
+calculate_weighted_or <- function(weighted_data, i) {
+  weighted_lgr <- glm(y ~ x + a, family="binomial", data=weighted_data[i,], weights=inverse_prob) 
+  weighted_or <- coef(weighted_lgr)[["a"]] %>% exp()
+  return(weighted_or)
+}
+
+# set seed of random number generator to ensure reproducibility
+set.seed(747)
+
+# bootstrap calculation of confidence intervals
+bootstrap_estimates <- boot(selected_data_with_weights, calculate_weighted_or, R=1000)
+
+# calculate bias-adjusted point estimate using entire selected subsample
+point_estimate <- calculate_weighted_or(selected_data_with_weights, 1:nrow(selected_data_with_weights))
+
+# calculate percentile bootstrap confidence interval
+conf_int <- quantile(bootstrap_estimates$t, c(0.025, 0.975))
+
+# output bias-adjusted estimate
+tibble(estimate=point_estimate, conf.low=conf_int[[1]], conf.high=conf_int[[2]]) %>%
+  knitr::kable()
+```
+
+If we expect selection probabilities to differ within levels of covariates then we can specify different selection probabilities for different strata of covariates.
+
+## Misclassification
+
+We will now consider some quantitative bias analysis methods for misclassification of a binary outcome. Similar approaches can be applied for misclassification of a binary exposure. 
+
+With differential misclassification of the outcome, the odds ratio is biased.
+
+```{r, message=FALSE}
+# load data
+misclassified_data <- read_csv("simulated_data.csv") %>% select(x,a,m_y,s)
+
+# fit logistic regression model with misclassified outcome
+lgr_model_misclassified <- glm(m_y ~ x + a, data=misclassified_data, family="binomial") 
+
+# tidy model outputs
+or_misclassified <- lgr_model_misclassified %>% 
+  tidy(exponentiate=TRUE, conf.int=TRUE) %>% 
+  filter(term == "a") %>% 
+  select(estimate, conf.low, conf.high) 
+
+# output as table
+or_misclassified %>%
+  knitr::kable(caption = "Estimated odds ratio with misclassified outcome")
+```
+
+### Bias formulas
+
+Bias formulas for misclassification typically apply to 2x2 tables or 2x2 tables stratified by covariates and require us to specify the bias parameters of sensitivity and specificity. Given that the data was simulated, we know that sensitivity and specificity among the treated were 80% and 99%, and that sensitivity and specificity among the unexposed were 100%. In practice, we do not know these values, but can estimate them using validation studies and specify a range or, for probabilistic bias analysis, distribution  of plausible values. 
+
+```{r, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+library(kableExtra)
+crude_table <- tibble(lbl=c("Y*=1", "Y*=0"), `A=1`=c("a", "c"), `A=0`=c("b", "d"))
+crude_table %>% knitr::kable(col.names=c("", "A=1", "A=0"),
+                             caption="Observed 2x2 table") %>% 
+  kableExtra::column_spec(1, bold = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+library(kableExtra)
+corrected_table <- tibble(lbl=c("Y=1", "Y=0"), `A=1`=c("A", "C"), `A=0`=c("B", "D"))
+corrected_table %>% knitr::kable(col.names=c("", "A=1", "A=0"),
+                             caption="Corrected 2x2 table") %>% 
+  kableExtra::column_spec(1, bold = TRUE)
+```
+
+```{r}
+
+# specify bias parameters
+sensitivity_a0 <-  1
+sensitivity_a1 <- 0.8
+specificity_a0 <- 1
+specificity_a1 <- 0.99
+
+# define function to correct 2x2 table
+correct_two_by_two <- function(a, b, c, d, sensitivity_a0, sensitivity_a1, specificity_a0, specificity_a1) {
+  A <- (a - (a + c)*(1-specificity_a1))/(sensitivity_a1 + specificity_a1 - 1)
+  B <- (b - (b + d)*(1-specificity_a0))/(sensitivity_a0 + specificity_a0 - 1)
+  C <- a + c - A
+  D <- b + d - B
+  return(c("A"=A,"B"=B,"C"=C,"D"=D))
+}
+
+# extract 2x2 table values
+a_x0 <- misclassified_data %>% filter(m_y==1, a==1, x==0) %>% nrow()
+b_x0 <- misclassified_data %>% filter(m_y==1, a==0, x==0) %>% nrow()
+c_x0 <- misclassified_data %>% filter(m_y==0, a==1, x==0) %>% nrow()
+d_x0 <- misclassified_data %>% filter(m_y==0, a==0, x==0) %>% nrow()
+a_x1 <- misclassified_data %>% filter(m_y==1, a==1, x==1) %>% nrow()
+b_x1 <- misclassified_data %>% filter(m_y==1, a==0, x==1) %>% nrow()
+c_x1 <- misclassified_data %>% filter(m_y==0, a==1, x==1) %>% nrow()
+d_x1 <- misclassified_data %>% filter(m_y==0, a==0, x==1) %>% nrow()
+
+# correct 2x2 table 
+corr_two_by_two_x0 <- correct_two_by_two(a_x0, b_x0, c_x0, d_x0, sensitivity_a0, sensitivity_a1, specificity_a0, specificity_a1)
+corr_two_by_two_x1 <- correct_two_by_two(a_x1, b_x1, c_x1, d_x1, sensitivity_a0, sensitivity_a1, specificity_a0, specificity_a1)
+
+# extract corrected 2x2 table values
+A_x0 <- corr_two_by_two_x0[[1]]
+B_x0 <- corr_two_by_two_x0[[2]]
+C_x0 <- corr_two_by_two_x0[[3]]
+D_x0 <- corr_two_by_two_x0[[4]]
+A_x1 <- corr_two_by_two_x1[[1]]
+B_x1 <- corr_two_by_two_x1[[2]]
+C_x1 <- corr_two_by_two_x1[[3]]
+D_x1 <- corr_two_by_two_x1[[4]]
+
+# calculate Mantel-Haenszel odds ratio
+numerator <- A_x1*D_x1/(A_x1 + B_x1 + C_x1 + D_x1) + A_x0*D_x0/(A_x0 + B_x0 + C_x0 + D_x0)
+denominator <- B_x1*C_x1/(A_x1 + B_x1 + C_x1 + D_x1) + B_x0*C_x0/(A_x0 + B_x0 + C_x0 + D_x0)
+
+mh_estimate <- numerator/denominator
+print(mh_estimate)
+```
+
+We can use bootstrapping to calculate a confidence interval.
+
+### Record-level correction
+
+For record-level correction we can as before calculate two by two tables, but as a second step use these to calculate predictive values which we can use to impute a *corrected* exposure.
+
+```{r}
+# calculate predictive values
+ppv_a1_x1 <- sensitivity_a1*A_x1/a_x1
+ppv_a0_x1 <- sensitivity_a0*B_x1/b_x1
+npv_a1_x1 <- specificity_a1*C_x1/c_x1
+npv_a0_x1 <- specificity_a0*D_x1/d_x1 
+ppv_a1_x0 <- sensitivity_a1*A_x0/a_x0
+ppv_a0_x0 <- sensitivity_a0*B_x0/b_x0
+npv_a1_x0 <- specificity_a1*C_x0/c_x0
+npv_a0_x0 <- specificity_a0*D_x0/d_x0 
+
+# impute outcome
+misclassified_data <- misclassified_data %>% mutate(y = rbinom(100000, 1, ppv_a1_x1*a*m_y*x + ppv_a0_x1*(1-a)*m_y*x + (1-npv_a1_x1)*a*(1-m_y)*x + (1-npv_a0_x1)*(1-a)*(1-m_y)*x + ppv_a1_x0*a*m_y*(1-x) + ppv_a0_x0*(1-a)*m_y*(1-x) + (1-npv_a1_x0)*a*(1-m_y)*(1-x) + (1-npv_a0_x0)*(1-a)*(1-m_y)*(1-x)))
+
+# fit a logistic regression model using imputed exposure
+glm(y ~ a + x, family="binomial", data=misclassified_data) %>% 
+  tidy(exponentiate=TRUE) %>% filter(term == "a") %>% select(estimate)
+```
+
+### Probabalistic bias analysis
+
+Rather than specify a single or range of values for the bias parameters of sensitivity and specificity we can instead specify probability distributions for these parameters and apply probabilistic bias analysis. Here for simplicity we will assume the distributions are not correlated, but we could also generate correlated bias parameters.(Fox 2022) We use bootstrapping to incorporate random error.
+
+```{r}
+library(EnvStats)
+
+# draw bias parameters from triangular distributions
+sensitivity_a1 <- rtri(1000, min=0.75, mode=0.8, max=0.85)
+specificity_a1 <- rtri(1000, min=0.985, mode=0.99, max=0.995)
+
+# specify fixed bias parameters
+sensitivity_a0 <-  1
+specificity_a0 <- 1
+
+# set seed for random number generator (for reproducibility)
+set.seed(2041)
+
+estimates <- NULL
+for (i in 1:1000) {
+  
+  bootstrap_indices <- sample(1:nrow(misclassified_data), nrow(misclassified_data), replace=TRUE)
+  
+  # extract 2x2 table values
+  a_x0 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==1, a==1, x==0) %>% nrow()
+  b_x0 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==1, a==0, x==0) %>% nrow()
+  c_x0 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==0, a==1, x==0) %>% nrow()
+  d_x0 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==0, a==0, x==0) %>% nrow()
+  a_x1 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==1, a==1, x==1) %>% nrow()
+  b_x1 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==1, a==0, x==1) %>% nrow()
+  c_x1 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==0, a==1, x==1) %>% nrow()
+  d_x1 <- misclassified_data[bootstrap_indices,] %>% filter(m_y==0, a==0, x==1) %>% nrow()
+  
+  # calculate corrected 2x2 table
+  corr_two_by_two_x0 <- correct_two_by_two(a_x0, b_x0, c_x0, d_x0, sensitivity_a0, sensitivity_a1[i], specificity_a0, specificity_a1[i])
+  corr_two_by_two_x1 <- correct_two_by_two(a_x1, b_x1, c_x1, d_x1, sensitivity_a0, sensitivity_a1[i], specificity_a0, specificity_a1[i])
+  
+  # extract corrected 2x2 table values
+  A_x0 <- corr_two_by_two_x0[[1]]
+  B_x0 <- corr_two_by_two_x0[[2]]
+  C_x0 <- corr_two_by_two_x0[[3]]
+  D_x0 <- corr_two_by_two_x0[[4]]
+  A_x1 <- corr_two_by_two_x1[[1]]
+  B_x1 <- corr_two_by_two_x1[[2]]
+  C_x1 <- corr_two_by_two_x1[[3]]
+  D_x1 <- corr_two_by_two_x1[[4]]
+
+  # calculate Mantel-Haenszel odds ratio
+  numerator <- A_x1*D_x1/(A_x1 + B_x1 + C_x1 + D_x1) + A_x0*D_x0/(A_x0 + B_x0 + C_x0 + D_x0)
+  denominator <- B_x1*C_x1/(A_x1 + B_x1 + C_x1 + D_x1) + B_x0*C_x0/(A_x0 + B_x0 + C_x0 + D_x0)
+  
+  estimates <- bind_rows(estimates, tibble_row(bias_adj_or = numerator/denominator))
+}
+
+# calculate median and 95% simulation interval of bias-adjusted estimates
+quantile(estimates$bias_adj_or, c(0.025, 0.5, 0.975)) 
+```
+
+```{r, fig.align='center', fig.cap="Distribution of bias-adjusted estimates"}
+# plot distribution of bias-adjusted estimates
+ggplot(data=estimates) + 
+  geom_density(aes(x=bias_adj_or), fill="darkblue", alpha=0.5) +
+  xlab("Bias-adjusted odds ratio")
+```
+
+
+## Unmeasured confounding
+
+If the confounder, $X$, had not been measured then we would not be able to adjust for it, and our estimates would be biased.
+
+```{r}
+# restrict data to selected subsample
+unmeasured_confounder_data <- sim_data %>% select(a,y)
+
+# fit logistic regression model without confounder
+lgr_model_confounded <- glm(y ~ a, family="binomial", data=unmeasured_confounder_data)
+
+# tidy model outputs
+or_confounded <- lgr_model_confounded %>% 
+  tidy(exponentiate=TRUE, conf.int=TRUE) %>% 
+  filter(term == "a") %>% 
+  select(estimate, conf.low, conf.high) 
+
+# output as table
+or_confounded %>%
+  knitr::kable(caption = "Estimated odds ratio with unmeasured confounder")
+```
+
+### Bias formula
+
+Given that the outcome is rare we can apply a bias formula for the risk ratio.
+
+$$
+RR_{ZY}^{BiasAdj} = RR_{ZY}^{Obs}\frac{1 + P(U=1|Z=0)(RR_{UY|Z}-1)}{1 + P(U=1|Z=1)(RR_{UY|Z}-1)}
+$$
+```{r}
+# define bias parameter
+PU1 <- 0.33
+PU0 <- 0.14
+RR_UY <- 2
+
+# define function to calculate bias-adjusted risk ratio
+uconf_bias_adj_rr <- function(rr_zy, pu1, pu0, rr_uy) {
+  bias_adj_rr <- rr_zy * (1 + pu0*(rr_uy - 1))/(1 + pu1*(rr_uy - 1))
+  return(bias_adj_rr)
+}
+
+# calculate bias-adjusted odds ratios
+or_confounded %>% 
+  mutate(across(c(estimate, conf.low, conf.high), ~ uconf_bias_adj_rr(.x, 0.33, 0.14, 2))) %>%
+  knitr::kable(caption = "Bias-adjusted odds ratio for unmeasured confounding")
+```
+
+## Multiple biases
+
+Finally, we consider a setting with both selection bias, misclassification, and unmeasured confounding. First, we correct for misclassification and selection to estimate the crude odds ratio, then we apply a bias formula to adjust for confounding.
+
+```{r, warning=FALSE, message=FALSE}
+multiple_bias_data <- read_csv("simulated_data.csv") %>% filter(s==1) %>% select(a,m_y) 
+
+# specify bias parameters
+sensitivity_a0 <-  1
+sensitivity_a1 <- 0.8
+specificity_a0 <- 1
+specificity_a1 <- 0.99
+
+## record-level correction for misclassification
+# extract 2x2 table values
+a <- multiple_bias_data %>% filter(m_y==1, a==1) %>% nrow()
+b <- multiple_bias_data %>% filter(m_y==1, a==0) %>% nrow()
+c <- multiple_bias_data %>% filter(m_y==0, a==1) %>% nrow()
+d <- multiple_bias_data %>% filter(m_y==0, a==0) %>% nrow()
+
+# correct 2x2 table 
+corr_two_by_two <- correct_two_by_two(a, b, c, d, sensitivity_a0, sensitivity_a1, specificity_a0, specificity_a1)
+
+# extract corrected 2x2 table values
+A <- corr_two_by_two[[1]]
+B <- corr_two_by_two[[2]]
+C <- corr_two_by_two[[3]]
+D <- corr_two_by_two[[4]]
+
+# calculate predictive values
+ppv_a1 <- sensitivity_a1*A/a
+ppv_a0 <- sensitivity_a0*B/b
+npv_a1 <- specificity_a1*C/c
+npv_a0 <- specificity_a0*D/d
+
+# impute outcome
+multiple_bias_data <- multiple_bias_data %>% mutate(y = rbinom(nrow(multiple_bias_data), 1, ppv_a1*a*m_y + ppv_a0*(1-a)*m_y + (1-npv_a1)*a*(1-m_y) + (1-npv_a0)*(1-a)*(1-m_y)))
+
+# calculate crude odds-ratio
+multiple_bias_lgr <- glm(y ~ a,  family="binomial", data=multiple_bias_data) 
+or_adj_misc <- coef(multiple_bias_lgr)["a"] %>% exp()
+  
+# correct odds ratio for selection bias
+or_adj_sel <- or_adj_misc * (S01*S10)/(S11*S00)
+
+# apply bias formula for confounding
+uconf_bias_adj_rr(or_adj_sel, 0.33, 0.14, 2)
+```
+
+# References 
+
+* Brown, Jeremy P, John R Tazare, Elizabeth Williamson, Kathryn E Mansfield, Stephen J Evans, Laurie A Tomlinson, Krishnan Bhaskaran, Liam Smeeth, Kevin Wing, and Ian J Douglas. 2021. “Proton Pump Inhibitors and Risk of All-Cause and Cause-Specific Mortality: A Cohort Study.” British Journal of Clinical Pharmacology 87 (8): 3150–61.
+* Ding, Peng, and Tyler J VanderWeele. 2016. “Sensitivity Analysis Without Assumptions.” Epidemiology (Cambridge, Mass.) 27 (3): 368.
+* Fox, Matthew P, Timothy L Lash, and Sander Greenland. 2005. “A Method to Automate Probabilistic Sensitivity Analyses of Misclassified Binary Variables.” International Journal of Epidemiology 34 (6): 1370–76.
+* Fox, Matthew P, Richard F MacLehose, and Timothy L Lash. 2022. Applying Quantitative Bias Analysis to Epidemiologic Data. Springer.
+* Greenland, Sander. 1996. “Basic Methods for Sensitivity Analysis of Biases.” International Journal of Epidemiology 25 (6): 1107–16.
+* Huybrechts, Krista F, Kristin Palmsten, Jerry Avorn, Lee S Cohen, Lewis B Holmes, Jessica M Franklin, Helen Mogun, et al. 2014. “Antidepressant Use in Pregnancy and the Risk of Cardiac Defects.” New England Journal of Medicine 370 (25): 2397–407.
+* Patorno, Elisabetta, Krista F Huybrechts, Brian T Bateman, Jacqueline M Cohen, Rishi J Desai, Helen Mogun, Lee S Cohen, and Sonia Hernandez-Diaz. 2017. “Lithium Use in Pregnancy and the Risk of Cardiac Malformations.” New England Journal of Medicine 376 (23): 2245–54.
+
+
+
